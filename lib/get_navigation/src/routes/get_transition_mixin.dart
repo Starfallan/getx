@@ -647,7 +647,11 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                 route.alignment, animation, secondaryAnimation, child);
           }
 
-          return const PageTransitionsTheme().buildTransitions(
+          return const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            },
+          ).buildTransitions(
               route,
               context,
               iosAnimation,
