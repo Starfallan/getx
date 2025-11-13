@@ -345,8 +345,8 @@ class GetSnackBarState extends State<GetSnackBar>
         child: SafeArea(
           minimum: widget.snackPosition == SnackPosition.BOTTOM
               ? EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom)
-              : EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  bottom: MediaQuery.viewInsetsOf(context).bottom)
+              : EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
           bottom: widget.snackPosition == SnackPosition.BOTTOM,
           top: widget.snackPosition == SnackPosition.TOP,
           left: false,

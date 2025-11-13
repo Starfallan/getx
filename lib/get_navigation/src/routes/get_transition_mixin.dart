@@ -143,8 +143,8 @@ class CupertinoBackGestureDetectorState<T>
     // For devices with notches, the drag area needs to be larger on the side
     // that has the notch.
     var dragAreaWidth = Directionality.of(context) == TextDirection.ltr
-        ? MediaQuery.of(context).padding.left
-        : MediaQuery.of(context).padding.right;
+        ? MediaQuery.viewPaddingOf(context).left
+        : MediaQuery.viewPaddingOf(context).right;
     dragAreaWidth = max(dragAreaWidth, widget.gestureWidth);
     return Stack(
       fit: StackFit.passthrough,
@@ -607,7 +607,11 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.native:
-          return const PageTransitionsTheme().buildTransitions(
+          return const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            },
+          ).buildTransitions(
               route,
               context,
               iosAnimation,
