@@ -1,113 +1,34 @@
-## [5.0.0-release-candidate-9.3.2]
+## [4.7.2]
 
-- Fix pana score
+Fix PopScope widget
 
-## [5.0.0-release-candidate-9.3.1]
+## [4.7.1]
 
-- Fix lint errors
+Fix super parameters bug in GetConnect
 
-## [5.0.0-release-candidate-9.3.0]
+## [4.7.0]
 
-- Support for Flutter 3.29.0
+Added wasm support to give people still using version 4 a longer lifespan. Version 5 is being moved to stable, but many people are still relying on version 4.
 
-- Remove remaining dart:html references
+## [4.6.6]
 
-## [5.0.0-release-candidate-9.2.1]
+Fix route not disposing in flutter 3.13
 
-- Remove remaining dart:html references
+## [4.6.5]
 
-## [5.0.0-release-candidate-9.2]
+Fix pub dev score
 
-- Remove dart:html references
+## [4.6.4]
 
-## [5.0.0-release-candidate-9.1]
+Added backward compatibility with flutter 2.
 
-- Add canPop to GetPage
-- Fix Get.offNamedUntil
-- Fix GetObserver
+## [4.6.3]
 
-## [5.0.0-release-candidate-9]
+Fix SDK constraints
 
-- Fix redirectDelegate middleware
-- Fix Get.until
+## [4.6.2]
 
-## [5.0.0-release-candidate-8]
-
-- Add wasm compilation support to GetConnect
-- Refactor example
-
-## [5.0.0-release-candidate-7]
-
-- Fix latest flutter version
-
-## [5.0.0-release-candidate-6]
-
--Fix Snackbar, upgrade to flutter 3.22 @Aniketkhote, improve parse route @korutx, fix popScope @wowbox, improve defaultDialog @leeyi, add support to wasm compilation @Ty, fix typos @CodeWithEmad, fix snackbar cancel @seungsuyoo update GetConnect @DaZealous and @ wheeOs, add bengali language @aratheunseen, fix lint issues: @MuhammamdArslanKhan
-
-## [5.0.0-release-candidate-5]
-
--Fix nested route issues, fixed issues in the latest flutter version
-
-## [5.0.0-release-candidate-4]
-
--Fix changeThemeMode and RxList
-
-## [5.0.0-release-candidate-3]
-
--Fix changeTheme
-
-## [5.0.0-release-candidate-2]
-
-This version adds built-in support for animation in Flutter in an easy, clear way, and without having to create a StatefulWidget with controllers and animations. All you need to do is call the name of the animation.
-
-If you want to add a "fadeIn" effect to any widget, simply add .fadeIn() to the end of it.
-
-```dart
- Container(
-              color: Colors.blue,
-              height: 100,
-              width: 100,
-       ).fadeIn(),
-```
-
-https://user-images.githubusercontent.com/35742643/221383556-075a0b71-1617-4a31-a3c7-1acc68732f59.mp4
-
-Maybe you want to merge two or more animations, just concatenate them at the end of the widget.
-
-```dart
- Container(
-              color: Colors.blue,
-              height: 100,
-              width: 100,
-      ).fadeIn().bounce(begin: -0.8, end: 0.3),
-```
-
-https://user-images.githubusercontent.com/35742643/221383613-9044c92f-7c6b-48c4-aa79-0a0c20d4068a.mp4
-
-Creating animation sequences in Flutter is one of the most painful things to do with the framework. You need to create tons of AnimationControllers. Well, using GetX 5 you just need to tell your animation that it is sequential. Just like that.
-
-```dart
- const FlutterLogo(size: 110)
-                        .bounce(begin: -0.8, end: 0.4)
-                        .fadeIn()
-                        .spin(isSequential: true)
-                        .wobble(isSequential: true, begin: 0, end: 8)
-                        .flip(isSequential: true)
-                        .fadeOut(isSequential: true),
-```
-
-Result:
-
-https://user-images.githubusercontent.com/35742643/221393968-20cb2411-516b-44a7-8b85-45090bece532.mp4
-
-## [5.0.0-release-candidate]
-
-Refactor StateManager, RouteManager and InstanceManager from scratch
-Fixed Bugs
-Added a Scopped DI
-Api now uses Navigator 2
-Added new RouteOutlet
-Added a new futurize method to StateMixin, that tracks updates, errors, and states programatically,
+Added compatibility with flutter 3.0
 
 ## [4.6.1]
 
