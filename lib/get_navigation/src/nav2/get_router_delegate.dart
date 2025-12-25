@@ -35,7 +35,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
                 body: Text('Route not found'),
               ),
             ) {
-    Get.log('GetDelegate is created !');
+    if(kDebugMode) Get.log('GetDelegate is created !');
   }
 
   @override

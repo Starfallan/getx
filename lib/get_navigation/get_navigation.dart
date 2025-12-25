@@ -1,6 +1,5 @@
 library get_navigation;
 
-export 'src/bottomsheet/bottomsheet.dart';
 export 'src/extension_navigation.dart';
 export 'src/nav2/get_information_parser.dart';
 export 'src/nav2/get_nav_config.dart';
@@ -16,5 +15,3 @@ export 'src/routes/get_route.dart';
 export 'src/routes/observers/route_observer.dart';
 export 'src/routes/route_middleware.dart';
 export 'src/routes/transitions_type.dart';
-export 'src/snackbar/snackbar.dart';
-export 'src/snackbar/snackbar_controller.dart';

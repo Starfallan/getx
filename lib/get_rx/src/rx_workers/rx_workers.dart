@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kDebugMode;
+
 import '../../../get_core/get_core.dart';
 import '../rx_types/rx_types.dart';
 import 'utils/debouncer.dart';
@@ -257,7 +259,7 @@ class Worker {
   //final bool _verbose = true;
   void _log(String msg) {
     //  if (!_verbose) return;
-    Get.log('$runtimeType $type $msg');
+    if(kDebugMode) Get.log('$runtimeType $type $msg');
   }
 
   void dispose() {

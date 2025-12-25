@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../../../get.dart';
@@ -11,7 +13,7 @@ class GetMaterialController extends SuperController {
 
   final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-  bool defaultPopGesture = GetPlatform.isIOS;
+  bool defaultPopGesture = Platform.isIOS;
   bool defaultOpaqueRoute = true;
 
   Transition? defaultTransition;

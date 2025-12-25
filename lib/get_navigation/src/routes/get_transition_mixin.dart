@@ -372,23 +372,18 @@ Cannot read the previousTitle for a route that has not yet been installed''',
     // In the middle of a back gesture drag, let the transition be linear to
     // match finger motions.
     final route = rawRoute as GetPageRoute<T>;
-    final linearTransition = isPopGestureInProgress(route);
-    final finalCurve = route.curve ?? Get.defaultTransitionCurve;
-    final hasCurve = route.curve != null;
     if (route.fullscreenDialog && route.transition == null) {
       return CupertinoFullscreenDialogTransition(
-        primaryRouteAnimation: hasCurve
-            ? CurvedAnimation(parent: animation, curve: finalCurve)
-            : animation,
+        primaryRouteAnimation: animation,
         secondaryRouteAnimation: secondaryAnimation,
-        linearTransition: linearTransition,
+        linearTransition: isPopGestureInProgress(route),
         child: child,
       );
     } else {
       if (route.customTransition != null) {
         return route.customTransition!.buildTransition(
           context,
-          finalCurve,
+          route.curve ?? Get.defaultTransitionCurve,
           route.alignment,
           animation,
           secondaryAnimation,
@@ -403,13 +398,9 @@ Cannot read the previousTitle for a route that has not yet been installed''',
         );
       }
 
-      /// Apply the curve by default...
-      final iosAnimation = animation;
-      animation = CurvedAnimation(parent: animation, curve: finalCurve);
-
       switch (route.transition ?? Get.defaultTransition) {
         case Transition.leftToRight:
-          return SlideLeftTransition().buildTransitions(
+          return SlideLeftTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -425,7 +416,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.downToUp:
-          return SlideDownTransition().buildTransitions(
+          return SlideDownTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -441,7 +432,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.upToDown:
-          return SlideTopTransition().buildTransitions(
+          return SlideTopTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -467,7 +458,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
               : child;
 
         case Transition.rightToLeft:
-          return SlideRightTransition().buildTransitions(
+          return SlideRightTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -483,7 +474,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.zoom:
-          return ZoomInTransition().buildTransitions(
+          return ZoomInTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -499,7 +490,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.fadeIn:
-          return FadeInTransition().buildTransitions(
+          return FadeInTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -515,7 +506,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.rightToLeftWithFade:
-          return RightToLeftFadeTransition().buildTransitions(
+          return RightToLeftFadeTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -531,7 +522,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.leftToRightWithFade:
-          return LeftToRightFadeTransition().buildTransitions(
+          return LeftToRightFadeTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -550,7 +541,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
           return CupertinoPageTransition(
             primaryRouteAnimation: animation,
             secondaryRouteAnimation: secondaryAnimation,
-            linearTransition: linearTransition,
+            linearTransition: isPopGestureInProgress(route),
             child: CupertinoBackGestureDetector<T>(
               gestureWidth:
                   route.gestureWidth?.call(context) ?? _kBackGestureWidth,
@@ -561,7 +552,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
           );
 
         case Transition.size:
-          return SizeTransitions().buildTransitions(
+          return SizeTransitions.buildTransitions(
               context,
               route.curve!,
               route.alignment,
@@ -614,7 +605,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
           ).buildTransitions(
               route,
               context,
-              iosAnimation,
+              animation,
               secondaryAnimation,
               route.popGesture ?? Get.defaultPopGesture
                   ? CupertinoBackGestureDetector<T>(
@@ -626,7 +617,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
                   : child);
 
         case Transition.circularReveal:
-          return CircularRevealTransition().buildTransitions(
+          return CircularRevealTransition.buildTransitions(
               context,
               route.curve,
               route.alignment,
@@ -654,7 +645,7 @@ Cannot read the previousTitle for a route that has not yet been installed''',
           ).buildTransitions(
               route,
               context,
-              iosAnimation,
+              animation,
               secondaryAnimation,
               route.popGesture ?? Get.defaultPopGesture
                   ? CupertinoBackGestureDetector<T>(

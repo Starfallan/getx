@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/widgets.dart';
 
 import '../../../instance_manager.dart';
@@ -86,7 +87,7 @@ class _GetCache<S extends GetLifeCycleBase?> extends WidgetCache<GetWidget<S>> {
 
   @override
   void onClose() {
-    if (_isCreator) {
+    if (kDebugMode && _isCreator) {
       Get.asap(() {
         widget!.controller!.onDelete();
         Get.log('"${widget!.controller.runtimeType}" onClose() called');

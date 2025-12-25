@@ -9,7 +9,7 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
   GetInformationParser({
     this.initialRoute = '/',
   }) {
-    Get.log('GetInformationParser is created !');
+    if(kDebugMode) Get.log('GetInformationParser is created !');
   }
   @override
   SynchronousFuture<GetNavConfig> parseRouteInformation(
@@ -27,7 +27,7 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
       location = initialRoute;
     }
 
-    Get.log('GetInformationParser: route location: $location');
+    if(kDebugMode) Get.log('GetInformationParser: route location: $location');
 
     final matchResult = Get.routeTree.matchRoute(location);
 

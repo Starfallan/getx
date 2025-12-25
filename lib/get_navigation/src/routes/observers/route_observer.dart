@@ -1,9 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/material.dart';
 
 import '../../../../get_core/get_core.dart';
 import '../../../../instance_manager.dart';
 import '../../../get_navigation.dart';
-import '../../dialog/dialog_route.dart';
 import '../../router_report.dart';
 
 /// Extracts the name of a route based on it's instance type
@@ -17,12 +17,8 @@ String? _extractRouteName(Route? route) {
     return route.routeName;
   }
 
-  if (route is GetDialogRoute) {
+  if (route is DialogRoute) {
     return 'DIALOG ${route.hashCode}';
-  }
-
-  if (route is GetModalBottomSheetRoute) {
-    return 'BOTTOMSHEET ${route.hashCode}';
   }
 
   return null;
@@ -41,14 +37,7 @@ class GetObserver extends NavigatorObserver {
     final currentRoute = _RouteData.ofRoute(route);
     final newRoute = _RouteData.ofRoute(previousRoute);
 
-    // if (currentRoute.isSnackbar) {
-    //   // Get.log("CLOSE SNACKBAR ${currentRoute.name}");
-    //   Get.log("CLOSE SNACKBAR");
-    // } else
-
-    if (currentRoute.isBottomSheet || currentRoute.isDialog) {
-      Get.log("CLOSE ${currentRoute.name}");
-    } else if (currentRoute.isGetPageRoute) {
+    if (kDebugMode && currentRoute.isGetPageRoute) {
       Get.log("CLOSE TO ROUTE ${currentRoute.name}");
     }
     if (previousRoute != null) {
@@ -71,9 +60,6 @@ class GetObserver extends NavigatorObserver {
       value.route = previousRoute;
       value.isBack = true;
       value.removed = '';
-      // value.isSnackbar = newRoute.isSnackbar;
-      value.isBottomSheet = newRoute.isBottomSheet;
-      value.isDialog = newRoute.isDialog;
     });
 
     // print('currentRoute.isDialog ${currentRoute.isDialog}');
@@ -86,14 +72,7 @@ class GetObserver extends NavigatorObserver {
     super.didPush(route, previousRoute);
     final newRoute = _RouteData.ofRoute(route);
 
-    // if (newRoute.isSnackbar) {
-    //   // Get.log("OPEN SNACKBAR ${newRoute.name}");
-    //   Get.log("OPEN SNACKBAR");
-    // } else
-
-    if (newRoute.isBottomSheet || newRoute.isDialog) {
-      Get.log("OPEN ${newRoute.name}");
-    } else if (newRoute.isGetPageRoute) {
+    if (kDebugMode && newRoute.isGetPageRoute) {
       Get.log("GOING TO ROUTE ${newRoute.name}");
     }
 
@@ -112,9 +91,6 @@ class GetObserver extends NavigatorObserver {
       value.route = route;
       value.isBack = false;
       value.removed = '';
-      value.isBottomSheet =
-          newRoute.isBottomSheet ? true : value.isBottomSheet ?? false;
-      value.isDialog = newRoute.isDialog ? true : value.isDialog ?? false;
     });
 
     if (routing != null) {
@@ -126,19 +102,14 @@ class GetObserver extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
     final routeName = _extractRouteName(route);
-    final currentRoute = _RouteData.ofRoute(route);
 
-    Get.log("REMOVING ROUTE $routeName");
+    if(kDebugMode) Get.log("REMOVING ROUTE $routeName");
 
     _routeSend?.update((value) {
       value.route = previousRoute;
       value.isBack = false;
       value.removed = routeName ?? '';
       value.previous = routeName ?? '';
-      // value.isSnackbar = currentRoute.isSnackbar ? false : value.isSnackbar;
-      value.isBottomSheet =
-          currentRoute.isBottomSheet ? false : value.isBottomSheet;
-      value.isDialog = currentRoute.isDialog ? false : value.isDialog;
     });
 
     if (route is GetPageRoute) {
@@ -152,10 +123,11 @@ class GetObserver extends NavigatorObserver {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     final newName = _extractRouteName(newRoute);
     final oldName = _extractRouteName(oldRoute);
-    final currentRoute = _RouteData.ofRoute(oldRoute);
 
-    Get.log("REPLACE ROUTE $oldName");
-    Get.log("NEW ROUTE $newName");
+    if(kDebugMode) {
+      Get.log("REPLACE ROUTE $oldName");
+      Get.log("NEW ROUTE $newName");
+    }
 
     if (newRoute != null) {
       RouterReportManager.reportCurrentRoute(newRoute);
@@ -172,10 +144,6 @@ class GetObserver extends NavigatorObserver {
       value.isBack = false;
       value.removed = '';
       value.previous = '$oldName';
-      // value.isSnackbar = currentRoute.isSnackbar ? false : value.isSnackbar;
-      value.isBottomSheet =
-          currentRoute.isBottomSheet ? false : value.isBottomSheet;
-      value.isDialog = currentRoute.isDialog ? false : value.isDialog;
     });
     if (oldRoute is GetPageRoute) {
       RouterReportManager.reportRouteWillDispose(oldRoute);
@@ -192,8 +160,6 @@ class Routing {
   String removed;
   Route<dynamic>? route;
   bool? isBack;
-  // bool? isSnackbar;
-  bool? isBottomSheet;
   bool? isDialog;
 
   Routing({
@@ -203,9 +169,6 @@ class Routing {
     this.removed = '',
     this.route,
     this.isBack,
-    // this.isSnackbar,
-    this.isBottomSheet,
-    this.isDialog,
   });
 
   void update(void Function(Routing value) fn) {
@@ -216,26 +179,17 @@ class Routing {
 /// This is basically a util for rules about 'what a route is'
 class _RouteData {
   final bool isGetPageRoute;
-  //final bool isSnackbar;
-  final bool isBottomSheet;
-  final bool isDialog;
   final String? name;
 
   _RouteData({
     required this.name,
     required this.isGetPageRoute,
-    // required this.isSnackbar,
-    required this.isBottomSheet,
-    required this.isDialog,
   });
 
   factory _RouteData.ofRoute(Route? route) {
     return _RouteData(
       name: _extractRouteName(route),
       isGetPageRoute: route is GetPageRoute,
-      // isSnackbar: route is SnackRoute,
-      isDialog: route is GetDialogRoute,
-      isBottomSheet: route is GetModalBottomSheetRoute,
     );
   }
 }

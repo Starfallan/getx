@@ -15,10 +15,6 @@ class RouterReportManager<T> {
   /// non-singleton instances.
   static final Map<Route?, HashSet<Function>> _routesByCreate = {};
 
-  void printInstanceStack() {
-    Get.log(_routesKey.toString());
-  }
-
   static Route? _current;
 
   // ignore: use_setters_to_change_properties

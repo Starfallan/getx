@@ -152,7 +152,7 @@ class MiddlewareRunner {
         break;
       }
     }
-    Get.log('Redirect to $to');
+    if(kDebugMode) Get.log('Redirect to $to');
     return to;
   }
 

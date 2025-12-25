@@ -233,7 +233,7 @@ class GetMaterialApp extends StatelessWidget {
           onInit?.call();
 
           Get.config(
-            enableLog: enableLog ?? Get.isLogEnable,
+            enableLog: enableLog ?? kDebugMode,
             logWriterCallback: logWriterCallback,
             defaultTransition: defaultTransition ?? Get.defaultTransition,
             defaultOpaqueRoute: opaqueRoute ?? Get.isOpaqueRouteDefault,
