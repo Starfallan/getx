@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../get.dart';
-import '../router_report.dart';
-import 'get_transition_mixin.dart';
+import 'package:get/get.dart';
+import 'package:get/get_navigation/src/router_report.dart';
+import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
 
 mixin PageRouteReportMixin<T> on Route<T> {
   @override
@@ -25,16 +24,8 @@ class GetPageRoute<T> extends PageRoute<T>
   /// The [builder], [maintainState], and [fullscreenDialog] arguments must not
   /// be null.
   GetPageRoute({
-    RouteSettings? settings,
-    this.transitionDuration = const Duration(milliseconds: 300),
-    this.opaque = true,
+    super.settings,
     this.parameter,
-    this.gestureWidth,
-    this.curve,
-    this.alignment,
-    this.transition,
-    this.popGesture,
-    this.customTransition,
     this.barrierDismissible = false,
     this.barrierColor,
     this.binding,
@@ -42,35 +33,24 @@ class GetPageRoute<T> extends PageRoute<T>
     this.routeName,
     this.page,
     this.title,
-    this.showCupertinoParallax = true,
     this.barrierLabel,
     this.maintainState = true,
-    bool fullscreenDialog = false,
     this.middlewares,
-  }) : super(settings: settings, fullscreenDialog: fullscreenDialog);
+  });
 
   @override
-  final Duration transitionDuration;
+  final Duration transitionDuration = const Duration(milliseconds: 300);
   final GetPageBuilder? page;
   final String? routeName;
-  //final String reference;
-  final CustomTransition? customTransition;
   final Bindings? binding;
   final Map<String, String>? parameter;
   final List<Bindings>? bindings;
 
   @override
-  final bool showCupertinoParallax;
-
-  @override
-  final bool opaque;
-  final bool? popGesture;
+  final bool opaque = true;
 
   @override
   final bool barrierDismissible;
-  final Transition? transition;
-  final Curve? curve;
-  final Alignment? alignment;
   final List<GetMiddleware>? middlewares;
 
   @override
@@ -85,8 +65,7 @@ class GetPageRoute<T> extends PageRoute<T>
   @override
   void dispose() {
     super.dispose();
-    final middlewareRunner = MiddlewareRunner(middlewares);
-    middlewareRunner.runOnPageDispose();
+    MiddlewareRunner(middlewares).runOnPageDispose();
   }
 
   Widget? _child;
@@ -121,7 +100,4 @@ class GetPageRoute<T> extends PageRoute<T>
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
-
-  @override
-  final double Function(BuildContext context)? gestureWidth;
 }

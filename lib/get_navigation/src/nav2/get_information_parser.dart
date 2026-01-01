@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../get.dart';
+import 'package:get/get.dart';
 
 class GetInformationParser extends RouteInformationParser<GetNavConfig> {
   final String initialRoute;
@@ -9,8 +8,9 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
   GetInformationParser({
     this.initialRoute = '/',
   }) {
-    if(kDebugMode) Get.log('GetInformationParser is created !');
+    if (kDebugMode) Get.log('GetInformationParser is created !');
   }
+
   @override
   SynchronousFuture<GetNavConfig> parseRouteInformation(
     RouteInformation routeInformation,
@@ -27,7 +27,7 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
       location = initialRoute;
     }
 
-    if(kDebugMode) Get.log('GetInformationParser: route location: $location');
+    if (kDebugMode) Get.log('GetInformationParser: route location: $location');
 
     final matchResult = Get.routeTree.matchRoute(location);
 

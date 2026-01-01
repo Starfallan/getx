@@ -1,4 +1,4 @@
-part of rx_stream;
+part of 'rx_stream.dart';
 
 /// [GetStream] is the lightest and most performative way of working
 /// with events at Dart. You sintaxe is like StreamController, but it works
@@ -14,6 +14,7 @@ class GetStream<T> {
   FutureOr<void> Function()? onCancel;
 
   GetStream({this.onListen, this.onPause, this.onResume, this.onCancel});
+
   List<LightSubscription<T>>? _onData = <LightSubscription<T>>[];
 
   bool? _isBusy = false;
@@ -133,10 +134,12 @@ class GetStream<T> {
       GetStreamTransformation(addSubscription, removeSubscription);
 }
 
-class LightSubscription<T> extends StreamSubscription<T> {
+class LightSubscription<T> implements StreamSubscription<T> {
   final RemoveSubscription<T> _removeSubscription;
+
   LightSubscription(this._removeSubscription,
       {this.onPause, this.onResume, this.onCancel});
+
   final void Function()? onPause;
   final void Function()? onResume;
   final FutureOr<void> Function()? onCancel;
@@ -189,6 +192,7 @@ class LightSubscription<T> extends StreamSubscription<T> {
 class GetStreamTransformation<T> extends Stream<T> {
   final AddSubscription<T> _addSubscription;
   final RemoveSubscription<T> _removeSubscription;
+
   GetStreamTransformation(this._addSubscription, this._removeSubscription);
 
   @override

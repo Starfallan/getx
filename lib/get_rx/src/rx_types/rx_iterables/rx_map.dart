@@ -1,4 +1,4 @@
-part of rx_types;
+part of '../rx_types.dart';
 
 class RxMap<K, V> extends MapMixin<K, V>
     with NotifyManager<Map<K, V>>, RxObjectMixin<Map<K, V>>

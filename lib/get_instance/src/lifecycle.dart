@@ -1,4 +1,4 @@
-import '../../get_core/get_core.dart';
+import 'package:get/get_core/get_core.dart';
 
 /// Special callable class to keep the contract of a regular method, and avoid
 /// overrides if you extend the class that uses it, as Dart has no final

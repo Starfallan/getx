@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
-
-import 'log.dart';
-import 'smart_management.dart';
+import 'package:get/get_core/src/log.dart';
+import 'package:get/get_core/src/smart_management.dart';
 
 /// GetInterface allows any auxiliary package to be merged into the "Get"
 /// class through extensions

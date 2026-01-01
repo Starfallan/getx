@@ -1,4 +1,4 @@
-part of rx_types;
+part of '../rx_types.dart';
 
 /// Create a list similar to `List<T>`
 class RxList<E> extends ListMixin<E>

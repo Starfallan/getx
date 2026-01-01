@@ -5,6 +5,7 @@ class GetMicrotask {
   int _microtask = 0;
 
   int get microtask => _microtask;
+
   int get version => _version;
 
   void exec(Function callback) {
@@ -34,7 +35,7 @@ class GetQueue {
     _queue.clear();
   }
 
-  void _check() async {
+  Future<void> _check() async {
     if (!_active && _queue.isNotEmpty) {
       _active = true;
       var item = _queue.removeAt(0);

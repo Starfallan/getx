@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../get_core/get_core.dart';
-import '../../../get_instance/get_instance.dart';
-import '../../../get_state_manager/get_state_manager.dart';
-import '../../../get_utils/get_utils.dart';
-import '../../get_navigation.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 class GetMaterialApp extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
@@ -24,7 +23,6 @@ class GetMaterialApp extends StatelessWidget {
   final ThemeData? theme;
   final ThemeData? darkTheme;
   final ThemeMode themeMode;
-  final CustomTransition? customTransition;
   final Color? color;
   final Map<String, Map<String, String>>? translationsKeys;
   final Translations? translations;
@@ -48,16 +46,13 @@ class GetMaterialApp extends StatelessWidget {
   final bool debugShowMaterialGrid;
   final ValueChanged<Routing?>? routingCallback;
   final Transition? defaultTransition;
-  final bool? opaqueRoute;
   final VoidCallback? onInit;
   final VoidCallback? onReady;
   final VoidCallback? onDispose;
   final bool? enableLog;
   final LogWriterCallback? logWriterCallback;
-  final bool? popGesture;
   final SmartManagement smartManagement;
   final Bindings? initialBinding;
-  final Duration? transitionDuration;
   final bool? defaultGlobalState;
   final List<GetPage>? getPages;
   final GetPage? unknownRoute;
@@ -66,8 +61,9 @@ class GetMaterialApp extends StatelessWidget {
   final RouterDelegate<Object>? routerDelegate;
   final BackButtonDispatcher? backButtonDispatcher;
   final bool useInheritedMediaQuery;
+
   const GetMaterialApp({
-    Key? key,
+    super.key,
     this.navigatorKey,
     this.scaffoldMessengerKey,
     this.home,
@@ -102,7 +98,6 @@ class GetMaterialApp extends StatelessWidget {
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
     this.scrollBehavior,
-    this.customTransition,
     this.translationsKeys,
     this.translations,
     this.onInit,
@@ -111,11 +106,8 @@ class GetMaterialApp extends StatelessWidget {
     this.routingCallback,
     this.defaultTransition,
     this.getPages,
-    this.opaqueRoute,
     this.enableLog = kDebugMode,
     this.logWriterCallback,
-    this.popGesture,
-    this.transitionDuration,
     this.defaultGlobalState,
     this.smartManagement = SmartManagement.full,
     this.initialBinding,
@@ -126,11 +118,10 @@ class GetMaterialApp extends StatelessWidget {
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
-        backButtonDispatcher = null,
-        super(key: key);
+        backButtonDispatcher = null;
 
   GetMaterialApp.router({
-    Key? key,
+    super.key,
     this.routeInformationProvider,
     this.scaffoldMessengerKey,
     RouteInformationParser<Object>? routeInformationParser,
@@ -160,23 +151,19 @@ class GetMaterialApp extends StatelessWidget {
     this.shortcuts,
     this.scrollBehavior,
     this.actions,
-    this.customTransition,
     this.translationsKeys,
     this.translations,
     this.textDirection,
     this.fallbackLocale,
     this.routingCallback,
     this.defaultTransition,
-    this.opaqueRoute,
     this.onInit,
     this.onReady,
     this.onDispose,
     this.enableLog = kDebugMode,
     this.logWriterCallback,
-    this.popGesture,
     this.smartManagement = SmartManagement.full,
     this.initialBinding,
-    this.transitionDuration,
     this.defaultGlobalState,
     this.getPages,
     this.navigatorObservers,
@@ -195,8 +182,7 @@ class GetMaterialApp extends StatelessWidget {
         onGenerateInitialRoutes = null,
         onUnknownRoute = null,
         routes = null,
-        initialRoute = null,
-        super(key: key) {
+        initialRoute = null {
     Get.routerDelegate = routerDelegate;
     Get.routeInformationParser = routeInformationParser;
   }
@@ -221,8 +207,6 @@ class GetMaterialApp extends StatelessWidget {
             Get.addTranslations(translationsKeys!);
           }
 
-          Get.customTransition = customTransition;
-
           initialBinding?.dependencies();
           if (getPages != null) {
             Get.addPages(getPages!);
@@ -233,33 +217,29 @@ class GetMaterialApp extends StatelessWidget {
           onInit?.call();
 
           Get.config(
-            enableLog: enableLog ?? kDebugMode,
-            logWriterCallback: logWriterCallback,
             defaultTransition: defaultTransition ?? Get.defaultTransition,
-            defaultOpaqueRoute: opaqueRoute ?? Get.isOpaqueRouteDefault,
-            defaultPopGesture: popGesture ?? Get.isPopGestureEnable,
-            defaultDurationTransition:
-                transitionDuration ?? Get.defaultTransitionDuration,
           );
         },
-        builder: (_) => routerDelegate != null
+        builder: (controller) => routerDelegate != null
             ? MaterialApp.router(
                 routerDelegate: routerDelegate!,
                 routeInformationParser: routeInformationParser!,
                 backButtonDispatcher: backButtonDispatcher,
                 routeInformationProvider: routeInformationProvider,
-                key: _.unikey,
+                key: controller.unikey,
                 builder: defaultBuilder,
                 title: title,
                 onGenerateTitle: onGenerateTitle,
                 color: color,
-                theme: _.theme ?? theme ?? ThemeData.fallback(),
-                darkTheme:
-                    _.darkTheme ?? darkTheme ?? theme ?? ThemeData.fallback(),
-                themeMode: _.themeMode ?? themeMode,
+                theme: controller.theme ?? theme ?? ThemeData.fallback(),
+                darkTheme: controller.darkTheme ??
+                    darkTheme ??
+                    theme ??
+                    ThemeData.fallback(),
+                themeMode: controller.themeMode ?? themeMode,
                 locale: Get.locale ?? locale,
                 scaffoldMessengerKey:
-                    scaffoldMessengerKey ?? _.scaffoldMessengerKey,
+                    scaffoldMessengerKey ?? controller.scaffoldMessengerKey,
                 localizationsDelegates: localizationsDelegates,
                 localeListResolutionCallback: localeListResolutionCallback,
                 localeResolutionCallback: localeResolutionCallback,
@@ -275,12 +255,12 @@ class GetMaterialApp extends StatelessWidget {
                 // useInheritedMediaQuery: useInheritedMediaQuery,
               )
             : MaterialApp(
-                key: _.unikey,
+                key: controller.unikey,
                 navigatorKey: (navigatorKey == null
                     ? Get.key
                     : Get.addKey(navigatorKey!)),
                 scaffoldMessengerKey:
-                    scaffoldMessengerKey ?? _.scaffoldMessengerKey,
+                    scaffoldMessengerKey ?? controller.scaffoldMessengerKey,
                 home: home,
                 routes: routes ?? const <String, WidgetBuilder>{},
                 initialRoute: initialRoute,
@@ -302,10 +282,12 @@ class GetMaterialApp extends StatelessWidget {
                 title: title,
                 onGenerateTitle: onGenerateTitle,
                 color: color,
-                theme: _.theme ?? theme ?? ThemeData.fallback(),
-                darkTheme:
-                    _.darkTheme ?? darkTheme ?? theme ?? ThemeData.fallback(),
-                themeMode: _.themeMode ?? themeMode,
+                theme: controller.theme ?? theme ?? ThemeData.fallback(),
+                darkTheme: controller.darkTheme ??
+                    darkTheme ??
+                    theme ??
+                    ThemeData.fallback(),
+                themeMode: controller.themeMode ?? themeMode,
                 locale: Get.locale ?? locale,
                 localizationsDelegates: localizationsDelegates,
                 localeListResolutionCallback: localeListResolutionCallback,

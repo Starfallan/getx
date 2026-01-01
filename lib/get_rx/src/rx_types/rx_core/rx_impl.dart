@@ -1,4 +1,4 @@
-part of rx_types;
+part of '../rx_types.dart';
 
 /// global object that registers against `GetX` and `Obx`, and allows the
 /// reactivity
@@ -136,9 +136,8 @@ mixin RxObjectMixin<T> on NotifyManager<T> {
   /// Closing the subscription will happen automatically when the observer
   /// Widget (`GetX` or `Obx`) gets unmounted from the Widget tree.
   void bindStream(Stream<T> stream) {
-    final listSubscriptions =
-        _subscriptions[subject] ??= <StreamSubscription>[];
-    listSubscriptions.add(stream.listen((va) => value = va));
+    (_subscriptions[subject] ??= <StreamSubscription>[])
+        .add(stream.listen((va) => value = va));
   }
 }
 
@@ -157,9 +156,7 @@ mixin NotifyManager<T> {
       final subs = rxGetx.listen((data) {
         if (!subject.isClosed) subject.add(data);
       });
-      final listSubscriptions =
-          _subscriptions[rxGetx] ??= <StreamSubscription>[];
-      listSubscriptions.add(subs);
+      (_subscriptions[rxGetx] ??= <StreamSubscription>[]).add(subs);
     }
   }
 
@@ -178,13 +175,13 @@ mixin NotifyManager<T> {
 
   /// Closes the subscriptions for this Rx, releasing the resources.
   void close() {
-    _subscriptions.forEach((getStream, subscriptions) {
-      for (final subscription in subscriptions) {
-        subscription.cancel();
-      }
-    });
-
-    _subscriptions.clear();
+    _subscriptions
+      ..forEach((getStream, subscriptions) {
+        for (final subscription in subscriptions) {
+          subscription.cancel();
+        }
+      })
+      ..clear();
     subject.close();
   }
 }
@@ -263,7 +260,8 @@ abstract class _RxImpl<T> extends RxNotifier<T> with RxObjectMixin<T> {
 }
 
 class RxBool extends Rx<bool> {
-  RxBool(bool initial) : super(initial);
+  RxBool(super.initial);
+
   @override
   String toString() {
     return value ? "true" : "false";
@@ -271,7 +269,8 @@ class RxBool extends Rx<bool> {
 }
 
 class RxnBool extends Rx<bool?> {
-  RxnBool([bool? initial]) : super(initial);
+  RxnBool([super.initial]);
+
   @override
   String toString() {
     return "$value";
@@ -343,7 +342,7 @@ extension RxnBoolExt on Rx<bool?> {
 /// For example, any custom "Model" class, like User().obs will use `Rx` as
 /// wrapper.
 class Rx<T> extends _RxImpl<T> {
-  Rx(T initial) : super(initial);
+  Rx(super.initial);
 
   @override
   dynamic toJson() {
@@ -356,7 +355,7 @@ class Rx<T> extends _RxImpl<T> {
 }
 
 class Rxn<T> extends Rx<T?> {
-  Rxn([T? initial]) : super(initial);
+  Rxn([super.initial]);
 
   @override
   dynamic toJson() {

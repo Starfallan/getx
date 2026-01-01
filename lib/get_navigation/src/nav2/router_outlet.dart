@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../get.dart';
+import 'package:get/get.dart';
 
 class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
     extends StatefulWidget {
@@ -13,11 +12,10 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
 
   //keys
   RouterOutlet.builder({
-    Key? key,
+    super.key,
     TDelegate? delegate,
     required this.builder,
-  })  : routerDelegate = delegate ?? Get.delegate<TDelegate, T>()!,
-        super(key: key);
+  }) : routerDelegate = delegate ?? Get.delegate<TDelegate, T>()!;
 
   RouterOutlet({
     Key? key,
@@ -40,6 +38,7 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
           delegate: delegate,
           key: key,
         );
+
   @override
   RouterOutletState<TDelegate, T> createState() =>
       RouterOutletState<TDelegate, T>();
@@ -48,6 +47,7 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
 class RouterOutletState<TDelegate extends RouterDelegate<T>, T extends Object>
     extends State<RouterOutlet<TDelegate, T>> {
   TDelegate get delegate => widget.routerDelegate;
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +62,7 @@ class RouterOutletState<TDelegate extends RouterDelegate<T>, T extends Object>
   }
 
   T? currentRoute;
+
   void _getCurrentRoute() {
     currentRoute = delegate.currentConfiguration;
   }
@@ -109,11 +110,12 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
           navigatorKey: navigatorKey,
           delegate: delegate,
         );
+
   GetRouterOutlet.pickPages({
-    Key? key,
+    super.key,
     Widget Function(GetDelegate delegate)? emptyWidget,
     GetPage Function(GetDelegate delegate)? emptyPage,
-    required Iterable<GetPage> Function(GetNavConfig currentNavStack) pickPages,
+    required super.pickPages,
     bool Function(Route<dynamic>, dynamic)? onPopPage,
     GlobalKey<NavigatorState>? navigatorKey,
     GetDelegate? delegate,
@@ -140,24 +142,14 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
             }
             return (emptyWidget?.call(rDelegate) ?? const SizedBox.shrink());
           },
-          pickPages: pickPages,
           delegate: delegate ?? Get.rootDelegate,
-          key: key,
         );
 
   GetRouterOutlet.builder({
-    Key? key,
-    required Widget Function(
-      BuildContext context,
-      GetDelegate delegate,
-      GetNavConfig? currentRoute,
-    ) builder,
+    super.key,
+    required super.builder,
     GetDelegate? routerDelegate,
-  }) : super.builder(
-          builder: builder,
-          delegate: routerDelegate,
-          key: key,
-        );
+  }) : super.builder(delegate: routerDelegate);
 }
 
 extension PagesListExt on List<GetPage> {

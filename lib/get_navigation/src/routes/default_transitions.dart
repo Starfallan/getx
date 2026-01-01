@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'circular_reveal_clipper.dart';
+import 'package:get/get_navigation/src/routes/circular_reveal_clipper.dart';
 
 abstract class LeftToRightFadeTransition {
- static Widget buildTransitions(
+  static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -32,8 +29,6 @@ abstract class LeftToRightFadeTransition {
 abstract class RightToLeftFadeTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -70,8 +65,6 @@ abstract class NoTransition {
 abstract class FadeInTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -82,8 +75,6 @@ abstract class FadeInTransition {
 abstract class SlideDownTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -100,8 +91,6 @@ abstract class SlideDownTransition {
 abstract class SlideLeftTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -118,8 +107,6 @@ abstract class SlideLeftTransition {
 abstract class SlideRightTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -136,8 +123,6 @@ abstract class SlideRightTransition {
 abstract class SlideTopTransition {
   static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -151,26 +136,9 @@ abstract class SlideTopTransition {
   }
 }
 
-abstract class ZoomInTransition {
- static Widget buildTransitions(
-      BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    return ScaleTransition(
-      scale: animation,
-      child: child,
-    );
-  }
-}
-
 abstract class SizeTransitions {
   static Widget buildTransitions(
       BuildContext context,
-      Curve curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
@@ -185,10 +153,8 @@ abstract class SizeTransitions {
 }
 
 abstract class CircularRevealTransition {
- static Widget buildTransitions(
+  static Widget buildTransitions(
       BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {

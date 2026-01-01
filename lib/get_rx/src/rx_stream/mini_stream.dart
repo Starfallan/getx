@@ -1,20 +1,22 @@
-part of rx_stream;
+part of 'rx_stream.dart';
 
 class Node<T> {
   T? data;
   Node<T>? next;
+
   Node({this.data, this.next});
 }
 
 class MiniSubscription<T> {
   const MiniSubscription(
       this.data, this.onError, this.onDone, this.cancelOnError, this.listener);
+
   final OnData<T> data;
   final Function? onError;
   final Callback? onDone;
   final bool cancelOnError;
 
-  Future<void> cancel() async => listener.removeListener(this);
+  void cancel() => listener.removeListener(this);
 
   final FastList<T> listener;
 }
@@ -66,8 +68,9 @@ class MiniStream<T> {
     if (_isClosed) {
       throw 'You can not close a closed Stream';
     }
-    listenable._notifyDone();
-    listenable.clear();
+    listenable
+      .._notifyDone()
+      ..clear();
     _isClosed = true;
   }
 }

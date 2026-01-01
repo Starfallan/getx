@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../get_core/get_core.dart';
-import '../../../get_instance/src/get_instance.dart';
-import '../../../get_rx/src/rx_types/rx_types.dart';
-import '../../get_state_manager.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_instance/src/get_instance.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 typedef GetXControllerBuilder<T extends DisposableInterface> = Widget Function(
     T controller);
@@ -27,7 +26,7 @@ class GetX<T extends DisposableInterface> extends StatefulWidget {
   final String? tag;
 
   const GetX({
-    Key? key,
+    super.key,
     this.tag,
     required this.builder,
     this.global = true,
@@ -40,7 +39,7 @@ class GetX<T extends DisposableInterface> extends StatefulWidget {
     this.didUpdateWidget,
     this.init,
     // this.streamController
-  }) : super(key: key);
+  });
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

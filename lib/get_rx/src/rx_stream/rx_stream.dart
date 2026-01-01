@@ -1,8 +1,8 @@
-library rx_stream;
+library;
 
 import 'dart:async';
 
-import '../rx_typedefs/rx_typedefs.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 
 part 'get_stream.dart';
 part 'mini_stream.dart';

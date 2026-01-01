@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../get_instance/src/get_instance.dart';
-import '../../../instance_manager.dart';
-import '../../get_state_manager.dart';
-import 'list_notifier.dart';
+import 'package:get/get_instance/src/get_instance.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
+import 'package:get/instance_manager.dart';
 
 /// Complies with `GetStateUpdater`
 ///
@@ -67,7 +67,7 @@ class GetBuilder<T extends GetxController> extends StatefulWidget {
   final T? init;
 
   const GetBuilder({
-    Key? key,
+    super.key,
     this.init,
     this.global = true,
     required this.builder,
@@ -80,7 +80,7 @@ class GetBuilder<T extends GetxController> extends StatefulWidget {
     this.id,
     this.didChangeDependencies,
     this.didUpdateWidget,
-  }) : super(key: key);
+  });
 
   // static T of<T extends GetxController>(
   //   BuildContext context, {

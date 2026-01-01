@@ -2,12 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
-
-import '../../get_core/get_core.dart';
-import '../../get_instance/src/bindings_interface.dart';
-import '../../get_utils/get_utils.dart';
-import '../get_navigation.dart';
-import 'root/parse_route.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_instance/src/bindings_interface.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_navigation/src/root/parse_route.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 /// It replaces the Flutter Navigator, but needs no context.
 /// You can to use navigator.push(YourRoute()) rather
@@ -41,18 +40,11 @@ extension GetNavigation on GetInterface {
   /// if you want to push anyway, set [preventDuplicates] to false
   Future<T?>? to<T>(
     dynamic page, {
-    bool? opaque,
-    Transition? transition,
-    Curve? curve,
-    Duration? duration,
     int? id,
     String? routeName,
-    bool fullscreenDialog = false,
     dynamic arguments,
     Bindings? binding,
     bool preventDuplicates = true,
-    bool? popGesture,
-    double Function(BuildContext context)? gestureWidth,
   }) {
     // var routeName = "/${page.runtimeType}";
     routeName ??= "/${page.runtimeType}";
@@ -62,31 +54,24 @@ extension GetNavigation on GetInterface {
     }
     return global(id).currentState?.push<T>(
           GetPageRoute<T>(
-            opaque: opaque ?? true,
             page: _resolvePage(page, 'to'),
             routeName: routeName,
-            gestureWidth: gestureWidth,
             settings: RouteSettings(
               name: routeName,
               arguments: arguments,
             ),
-            popGesture: popGesture ?? defaultPopGesture,
-            transition: transition ?? defaultTransition,
-            curve: curve ?? defaultTransitionCurve,
-            fullscreenDialog: fullscreenDialog,
             binding: binding,
-            transitionDuration: duration ?? defaultTransitionDuration,
           ),
         );
   }
 
-  GetPageBuilder _resolvePage(dynamic page, String method) {
+  static GetPageBuilder _resolvePage(dynamic page, String method) {
     if (page is GetPageBuilder) {
       return page;
     } else if (page is Widget) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         Get.log(
-          '''WARNING, consider using: "Get.$method(() => Page())" instead of "Get.$method(Page())".
+            '''WARNING, consider using: "Get.$method(() => Page())" instead of "Get.$method(Page())".
 Using a widget function instead of a widget fully guarantees that the widget and its controllers will be removed from memory when they are no longer used.
       ''');
       }
@@ -402,39 +387,28 @@ you can only use widgets and widget functions here''';
   /// if you want to push anyway, set [preventDuplicates] to false
   Future<T?>? off<T>(
     dynamic page, {
-    bool opaque = false,
-    Transition? transition,
-    Curve? curve,
-    bool? popGesture,
     int? id,
     String? routeName,
     dynamic arguments,
     Bindings? binding,
-    bool fullscreenDialog = false,
     bool preventDuplicates = true,
-    Duration? duration,
-    double Function(BuildContext context)? gestureWidth,
   }) {
     routeName ??= "/${page.runtimeType.toString()}";
     routeName = _cleanRouteName(routeName);
     if (preventDuplicates && routeName == currentRoute) {
       return null;
     }
-    return global(id).currentState?.pushReplacement(GetPageRoute(
-        opaque: opaque,
-        gestureWidth: gestureWidth,
-        page: _resolvePage(page, 'off'),
-        binding: binding,
-        settings: RouteSettings(
-          arguments: arguments,
-          name: routeName,
-        ),
-        routeName: routeName,
-        fullscreenDialog: fullscreenDialog,
-        popGesture: popGesture ?? defaultPopGesture,
-        transition: transition ?? defaultTransition,
-        curve: curve ?? defaultTransitionCurve,
-        transitionDuration: duration ?? defaultTransitionDuration));
+    return global(id).currentState?.pushReplacement(
+          GetPageRoute(
+            page: _resolvePage(page, 'off'),
+            binding: binding,
+            settings: RouteSettings(
+              arguments: arguments,
+              name: routeName,
+            ),
+            routeName: routeName,
+          ),
+        );
   }
 
   ///
@@ -471,37 +445,25 @@ you can only use widgets and widget functions here''';
     dynamic page, {
     RoutePredicate? predicate,
     bool opaque = false,
-    bool? popGesture,
     int? id,
     String? routeName,
     dynamic arguments,
     Bindings? binding,
-    bool fullscreenDialog = false,
-    Transition? transition,
-    Curve? curve,
-    Duration? duration,
-    double Function(BuildContext context)? gestureWidth,
   }) {
     routeName ??= "/${page.runtimeType.toString()}";
     routeName = _cleanRouteName(routeName);
     return global(id).currentState?.pushAndRemoveUntil<T>(
-        GetPageRoute<T>(
-          opaque: opaque,
-          popGesture: popGesture ?? defaultPopGesture,
-          page: _resolvePage(page, 'offAll'),
-          binding: binding,
-          gestureWidth: gestureWidth,
-          settings: RouteSettings(
-            name: routeName,
-            arguments: arguments,
+          GetPageRoute<T>(
+            page: _resolvePage(page, 'offAll'),
+            binding: binding,
+            settings: RouteSettings(
+              name: routeName,
+              arguments: arguments,
+            ),
+            routeName: routeName,
           ),
-          fullscreenDialog: fullscreenDialog,
-          routeName: routeName,
-          transition: transition ?? defaultTransition,
-          curve: curve ?? defaultTransitionCurve,
-          transitionDuration: duration ?? defaultTransitionDuration,
-        ),
-        predicate ?? (route) => false);
+          predicate ?? (route) => false,
+        );
   }
 
   /// Takes a route [name] String generated by [to], [off], [offAll]
@@ -509,7 +471,7 @@ you can only use widgets and widget functions here''';
   /// accommodates the format.
   /// TODO: check for a more "appealing" URL naming convention.
   /// `() => MyHomeScreenView` becomes `/my-home-screen-view`.
-  String _cleanRouteName(String name) {
+  static String _cleanRouteName(String name) {
     name = name.replaceAll('() => ', '');
 
     /// uncommonent for URL styling.
@@ -521,35 +483,17 @@ you can only use widgets and widget functions here''';
   }
 
   /// change default config of Get
-  void config(
-      {bool? enableLog,
-      LogWriterCallback? logWriterCallback,
-      bool? defaultPopGesture,
-      bool? defaultOpaqueRoute,
-      Duration? defaultDurationTransition,
-      bool? defaultGlobalState,
-      Transition? defaultTransition}) {
-    if (logWriterCallback != null) {
-      Get.log = logWriterCallback;
-    }
-    if (defaultPopGesture != null) {
-      _getxController.defaultPopGesture = defaultPopGesture;
-    }
-    if (defaultOpaqueRoute != null) {
-      _getxController.defaultOpaqueRoute = defaultOpaqueRoute;
-    }
+  void config({
+    Transition? defaultTransition,
+  }) {
     if (defaultTransition != null) {
       _getxController.defaultTransition = defaultTransition;
     }
-
-    if (defaultDurationTransition != null) {
-      _getxController.defaultTransitionDuration = defaultDurationTransition;
-    }
   }
 
-  Future<void> updateLocale(Locale l) async {
+  Future<void> updateLocale(Locale l) {
     Get.locale = l;
-    await forceAppUpdate();
+    return forceAppUpdate();
   }
 
   /// As a rule, Flutter knows which widget to update,
@@ -565,8 +509,8 @@ you can only use widgets and widget functions here''';
   /// reconstruct the application from the sketch, use this with caution.
   /// Your entire application will be rebuilt, and touch events will not
   /// work until the end of rendering.
-  Future<void> forceAppUpdate() async {
-    await engine.performReassemble();
+  Future<void> forceAppUpdate() {
+    return engine.performReassemble();
   }
 
   void appUpdate() => _getxController.update();
@@ -629,11 +573,8 @@ you can only use widgets and widget functions here''';
   /// check a raw current route
   Route<dynamic>? get rawRoute => routing.route;
 
-  /// check if popGesture is enable
-  bool get isPopGestureEnable => defaultPopGesture;
-
   /// check if default opaque route is enable
-  bool get isOpaqueRouteDefault => defaultOpaqueRoute;
+  bool get isOpaqueRouteDefault => true;
 
   /// give access to currentContext
   BuildContext? get context => key.currentContext;
@@ -719,36 +660,17 @@ you can only use widgets and widget functions here''';
 
   GetMaterialController get rootController => _getxController;
 
-  bool get defaultPopGesture => _getxController.defaultPopGesture;
-  bool get defaultOpaqueRoute => _getxController.defaultOpaqueRoute;
-
-  Transition? get defaultTransition => _getxController.defaultTransition;
-
-  Duration get defaultTransitionDuration {
-    return _getxController.defaultTransitionDuration;
-  }
-
-  Curve get defaultTransitionCurve => _getxController.defaultTransitionCurve;
-
-  Curve get defaultDialogTransitionCurve {
-    return _getxController.defaultDialogTransitionCurve;
-  }
-
-  Duration get defaultDialogTransitionDuration {
-    return _getxController.defaultDialogTransitionDuration;
-  }
+  Transition get defaultTransition => _getxController.defaultTransition;
 
   Routing get routing => _getxController.routing;
 
   Map<String, String?> get parameters => _getxController.parameters;
+
   set parameters(Map<String, String?> newParameters) =>
       _getxController.parameters = newParameters;
 
-  CustomTransition? get customTransition => _getxController.customTransition;
-  set customTransition(CustomTransition? newTransition) =>
-      _getxController.customTransition = newTransition;
-
   bool get testMode => _getxController.testMode;
+
   set testMode(bool isTest) => _getxController.testMode = isTest;
 
   void resetRootNavigator() {
@@ -770,6 +692,7 @@ extension NavTwoExt on GetInterface {
   static final _routeTree = ParseRouteTree(routes: []);
 
   ParseRouteTree get routeTree => _routeTree;
+
   void addPage(GetPage getPage) {
     routeTree.addRoute(getPage);
   }

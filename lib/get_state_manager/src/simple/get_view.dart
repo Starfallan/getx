@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/widgets.dart';
-
-import '../../../instance_manager.dart';
-import '../../../utils.dart';
-import 'get_widget_cache.dart';
+import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
+import 'package:get/instance_manager.dart';
+import 'package:get/utils.dart';
 
 /// GetView is a great way of quickly access your Controller
 /// without having to call Get.find<AwesomeController>() yourself.
@@ -32,7 +31,7 @@ import 'get_widget_cache.dart';
 /// }
 ///``
 abstract class GetView<T> extends StatelessWidget {
-  const GetView({Key? key}) : super(key: key);
+  const GetView({super.key});
 
   final String? tag = null;
 
@@ -49,7 +48,7 @@ abstract class GetView<T> extends StatelessWidget {
 /// GetWidget will have your own controller, and will be call events as `onInit`
 /// and `onClose` when the controller get in/get out on memory.
 abstract class GetWidget<S extends GetLifeCycleBase?> extends GetWidgetCache {
-  const GetWidget({Key? key}) : super(key: key);
+  const GetWidget({super.key});
 
   @protected
   final String? tag = null;
@@ -71,6 +70,7 @@ class _GetCache<S extends GetLifeCycleBase?> extends WidgetCache<GetWidget<S>> {
   S? _controller;
   bool _isCreator = false;
   InstanceInfo? info;
+
   @override
   void onInit() {
     info = GetInstance().getInstanceInfo<S>(tag: widget!.tag);

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../../../get_core/get_core.dart';
+import 'package:get/get_core/get_core.dart';
 
 class _IntlHost {
   Locale? locale;

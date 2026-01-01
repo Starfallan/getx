@@ -1,4 +1,4 @@
-import 'get_instance.dart';
+import 'package:get/get_instance/src/get_instance.dart';
 
 /// [Bindings] should be extended or implemented.
 /// When using `GetMaterialApp`, all `GetPage`s and navigation

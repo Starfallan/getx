@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-
-import '../../../get.dart';
+import 'package:get/get.dart';
 
 abstract class _RouteMiddleware {
   /// The Order of the Middlewares to run.
@@ -152,7 +151,7 @@ class MiddlewareRunner {
         break;
       }
     }
-    if(kDebugMode) Get.log('Redirect to $to');
+    if (kDebugMode) Get.log('Redirect to $to');
     return to;
   }
 
@@ -207,17 +206,8 @@ class PageRedirect {
               arguments: settings!.arguments,
             )
           : settings,
-      curve: r.curve,
-      opaque: r.opaque,
-      showCupertinoParallax: r.showCupertinoParallax,
-      gestureWidth: r.gestureWidth,
-      customTransition: r.customTransition,
       binding: r.binding,
       bindings: r.bindings,
-      transitionDuration: r.transitionDuration ?? Get.defaultTransitionDuration,
-      transition: r.transition,
-      popGesture: r.popGesture,
-      fullscreenDialog: r.fullscreenDialog,
       middlewares: r.middlewares,
     );
   }
@@ -230,22 +220,12 @@ class PageRedirect {
     return GetPageRoute<T>(
       page: r.page,
       parameter: r.parameters,
-      alignment: r.alignment,
       title: r.title,
       maintainState: r.maintainState,
       routeName: r.name,
       settings: r,
-      curve: r.curve,
-      showCupertinoParallax: r.showCupertinoParallax,
-      gestureWidth: r.gestureWidth,
-      opaque: r.opaque,
-      customTransition: r.customTransition,
       binding: r.binding,
       bindings: r.bindings,
-      transitionDuration: r.transitionDuration ?? Get.defaultTransitionDuration,
-      transition: r.transition,
-      popGesture: r.popGesture,
-      fullscreenDialog: r.fullscreenDialog,
       middlewares: r.middlewares,
     );
   }
@@ -283,8 +263,7 @@ class PageRedirect {
   void addPageParameter(GetPage route) {
     if (route.parameters == null) return;
 
-    final parameters = Get.parameters;
-    parameters.addEntries(route.parameters!.entries);
+    final parameters = Get.parameters..addEntries(route.parameters!.entries);
     Get.parameters = parameters;
   }
 }

@@ -1,10 +1,9 @@
 // ignore: prefer_mixin
 import 'package:flutter/widgets.dart';
-
-import '../../../instance_manager.dart';
-import '../rx_flutter/rx_disposable.dart';
-import '../rx_flutter/rx_notifier.dart';
-import 'list_notifier.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_notifier.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
+import 'package:get/instance_manager.dart';
 
 // ignore: prefer_mixin
 abstract class GetxController extends DisposableInterface
@@ -120,8 +119,12 @@ mixin FullLifeCycleMixin on FullLifeCycleController {
   }
 
   void onResumed();
+
   void onPaused();
+
   void onInactive();
+
   void onDetached();
+
   void onHidden();
 }

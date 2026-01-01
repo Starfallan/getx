@@ -1,18 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart' show kDebugMode;
-
-import '../../get_core/get_core.dart';
-import '../../get_navigation/src/router_report.dart';
-import 'lifecycle.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_instance/src/lifecycle.dart';
+import 'package:get/get_navigation/src/router_report.dart';
 
 class InstanceInfo {
   final bool? isPermanent;
   final bool? isSingleton;
+
   bool get isCreate => !isSingleton!;
   final bool isRegistered;
   final bool isPrepared;
   final bool? isInit;
+
   const InstanceInfo({
     required this.isPermanent,
     required this.isSingleton,
@@ -231,7 +232,7 @@ class GetInstance {
     final newKey = key ?? _getKey(S, tag);
 
     if (!_singl.containsKey(newKey)) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         Get.log('Instance "$newKey" is not registered.', isError: true);
       }
       return null;
@@ -256,7 +257,7 @@ class GetInstance {
     final i = _singl[key]!.getDependency() as S;
     if (i is GetLifeCycleBase) {
       i.onStart();
-      if(kDebugMode) {
+      if (kDebugMode) {
         if (tag == null) {
           Get.log('Instance "$S" has been initialized');
         } else {
@@ -355,7 +356,7 @@ class GetInstance {
     final newKey = key ?? _getKey(S, tag);
 
     if (!_singl.containsKey(newKey)) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         Get.log('Instance "$newKey" already removed.', isError: true);
       }
       return false;
@@ -373,12 +374,12 @@ class GetInstance {
     }
 
     if (builder.permanent && !force) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         Get.log(
-        // ignore: lines_longer_than_80_chars
-        '"$newKey" has been marked as permanent, SmartManagement is not authorized to delete it.',
-        isError: true,
-      );
+          // ignore: lines_longer_than_80_chars
+          '"$newKey" has been marked as permanent, SmartManagement is not authorized to delete it.',
+          isError: true,
+        );
       }
       return false;
     }
@@ -390,21 +391,22 @@ class GetInstance {
 
     if (i is GetLifeCycleBase) {
       i.onDelete();
-      if(kDebugMode) Get.log('"$newKey" onDelete() called');
+      if (kDebugMode) Get.log('"$newKey" onDelete() called');
     }
 
     if (builder.fenix) {
-      builder.dependency = null;
-      builder.isInit = false;
+      builder
+        ..dependency = null
+        ..isInit = false;
       return true;
     } else {
       if (dep.lateRemove != null) {
         dep.lateRemove = null;
-        if(kDebugMode) Get.log('"$newKey" deleted from memory');
+        if (kDebugMode) Get.log('"$newKey" deleted from memory');
         return false;
       } else {
         _singl.remove(newKey);
-        if(kDebugMode) {
+        if (kDebugMode) {
           if (_singl.containsKey(newKey)) {
             Get.log('Error removing object "$newKey"', isError: true);
           } else {
@@ -430,11 +432,14 @@ class GetInstance {
   void reloadAll({bool force = false}) {
     _singl.forEach((key, value) {
       if (value.permanent && !force) {
-        if(kDebugMode) Get.log('Instance "$key" is permanent. Skipping reload');
+        if (kDebugMode) {
+          Get.log('Instance "$key" is permanent. Skipping reload');
+        }
       } else {
-        value.dependency = null;
-        value.isInit = false;
-        if(kDebugMode) Get.log('Instance "$key" was reloaded.');
+        value
+          ..dependency = null
+          ..isInit = false;
+        if (kDebugMode) Get.log('Instance "$key" was reloaded.');
       }
     });
   }
@@ -450,11 +455,11 @@ class GetInstance {
     if (builder == null) return;
 
     if (builder.permanent && !force) {
-      if(kDebugMode) {
+      if (kDebugMode) {
         Get.log(
-        '''Instance "$newKey" is permanent. Use [force = true] to force the restart.''',
-        isError: true,
-      );
+          '''Instance "$newKey" is permanent. Use [force = true] to force the restart.''',
+          isError: true,
+        );
       }
       return;
     }
@@ -467,12 +472,13 @@ class GetInstance {
 
     if (i is GetLifeCycleBase) {
       i.onDelete();
-      if(kDebugMode) Get.log('"$newKey" onDelete() called');
+      if (kDebugMode) Get.log('"$newKey" onDelete() called');
     }
 
-    builder.dependency = null;
-    builder.isInit = false;
-    if(kDebugMode) Get.log('Instance "$newKey" was restarted.');
+    builder
+      ..dependency = null
+      ..isInit = false;
+    if (kDebugMode) Get.log('Instance "$newKey" was restarted.');
   }
 
   /// Check if a Class Instance<[S]> (or [tag]) is registered in memory.
@@ -546,7 +552,7 @@ class _InstanceBuilderFactory<S> {
   S getDependency() {
     if (isSingleton!) {
       if (dependency == null) {
-        if(kDebugMode) {
+        if (kDebugMode) {
           if (tag == null) {
             Get.log('Instance "$S" has been created');
           } else {

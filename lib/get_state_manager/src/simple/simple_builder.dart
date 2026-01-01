@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-
-import 'get_state.dart';
-import 'list_notifier.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 
 typedef ValueBuilderUpdateCallback<T> = void Function(T snapshot);
 typedef ValueBuilderBuilder<T> = Widget Function(
@@ -31,12 +30,12 @@ class ValueBuilder<T> extends StatefulWidget {
   final void Function(T)? onUpdate;
 
   const ValueBuilder({
-    Key? key,
+    super.key,
     this.initialValue,
     this.onDispose,
     this.onUpdate,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   ValueBuilderState<T> createState() => ValueBuilderState<T>();
@@ -80,7 +79,7 @@ class ValueBuilderState<T> extends State<ValueBuilder<T?>> {
 class SimpleBuilder extends StatefulWidget {
   final Widget Function(BuildContext) builder;
 
-  const SimpleBuilder({Key? key, required this.builder}) : super(key: key);
+  const SimpleBuilder({super.key, required this.builder});
 
   @override
   SimpleBuilderState createState() => SimpleBuilderState();

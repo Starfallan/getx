@@ -1,10 +1,11 @@
-import '../get.dart';
+import 'package:get/get.dart';
 
 extension GetResetExt on GetInterface {
   void reset({bool clearRouteBindings = true}) {
     GetInstance().resetInstance(clearRouteBindings: clearRouteBindings);
-    Get.clearRouteTree();
-    Get.clearTranslations();
-    Get.resetRootNavigator();
+    Get
+      ..clearRouteTree()
+      ..clearTranslations()
+      ..resetRootNavigator();
   }
 }

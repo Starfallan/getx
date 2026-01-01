@@ -1,5 +1,5 @@
-import '../../route_manager.dart';
-import 'get_instance.dart';
+import 'package:get/get_instance/src/get_instance.dart';
+import 'package:get/route_manager.dart';
 
 extension Inst on GetInterface {
   /// Creates a new Instance<S> lazily from the `<S>builder()` callback.
@@ -39,7 +39,7 @@ extension Inst on GetInterface {
   /// Awaits for the resolution of the Future from `builder()`parameter and
   /// stores the Instance returned.
   Future<S> putAsync<S>(AsyncInstanceBuilderCallback<S> builder,
-          {String? tag, bool permanent = false}) async =>
+          {String? tag, bool permanent = false}) =>
       GetInstance().putAsync<S>(builder, tag: tag, permanent: permanent);
 
   /// Creates a new Class Instance [S] from the builder callback[S].
@@ -108,15 +108,14 @@ extension Inst on GetInterface {
   ///
   /// - [tag] Optional "tag" used to register the Instance
   /// - [force] Will delete an Instance even if marked as `permanent`.
-  Future<bool> delete<S>({String? tag, bool force = false}) async =>
+  bool delete<S>({String? tag, bool force = false}) =>
       GetInstance().delete<S>(tag: tag, force: force);
 
   /// Deletes all Instances, cleaning the memory and closes any open
   /// controllers (`DisposableInterface`).
   ///
   /// - [force] Will delete the Instances even if marked as `permanent`.
-  Future<void> deleteAll({bool force = false}) async =>
-      GetInstance().deleteAll(force: force);
+  void deleteAll({bool force = false}) => GetInstance().deleteAll(force: force);
 
   void reloadAll({bool force = false}) => GetInstance().reloadAll(force: force);
 

@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
-import '../../../instance_manager.dart';
-import '../../get_state_manager.dart';
-import '../simple/list_notifier.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
+import 'package:get/instance_manager.dart';
 
 mixin StateMixin<T> on ListNotifierMixin {
   T? _value;
@@ -119,7 +118,7 @@ extension ReactiveT<T> on T {
 typedef Condition = bool Function();
 
 abstract class GetNotifier<T> extends Value<T> with GetLifeCycleBase {
-  GetNotifier(T initial) : super(initial) {
+  GetNotifier(super.initial) {
     $configureLifeCycle();
   }
 
@@ -147,7 +146,8 @@ extension StateExt<T> on StateMixin<T> {
             ? onError(status.errorMessage)
             : Center(child: Text('A error occurred: ${status.errorMessage}'));
       } else if (status.isEmpty) {
-        return onEmpty ?? const SizedBox.shrink(); // Also can be widget(null); but is risky
+        return onEmpty ??
+            const SizedBox.shrink(); // Also can be widget(null); but is risky
       }
       return widget(value);
     });

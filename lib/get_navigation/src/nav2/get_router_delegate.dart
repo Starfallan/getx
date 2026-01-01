@@ -4,9 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../get.dart';
-import '../../../get_state_manager/src/simple/list_notifier.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 
 class GetDelegate extends RouterDelegate<GetNavConfig>
     with ListenableMixin, ListNotifierMixin {
@@ -35,7 +34,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
                 body: Text('Route not found'),
               ),
             ) {
-    if(kDebugMode) Get.log('GetDelegate is created !');
+    if (kDebugMode) Get.log('GetDelegate is created !');
   }
 
   @override
@@ -131,16 +130,16 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
 
   Future<bool> handlePopupRoutes({
     Object? result,
-  }) async {
+  }) {
     Route? currentRoute;
     navigatorKey.currentState!.popUntil((route) {
       currentRoute = route;
       return true;
     });
     if (currentRoute is PopupRoute) {
-      return await navigatorKey.currentState!.maybePop(result);
+      return navigatorKey.currentState!.maybePop(result);
     }
-    return false;
+    return Future.value(false);
   }
 
   Future<T?>? offAndToNamed<T>(
@@ -164,13 +163,13 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     String page, {
     dynamic arguments,
     Map<String, String>? parameters,
-  }) async {
+  }) {
     history.removeLast();
     return toNamed<T>(page, arguments: arguments, parameters: parameters);
   }
 
-  Future<GetNavConfig?> popHistory() async {
-    return await _popHistory();
+  Future<GetNavConfig?>? popHistory() {
+    return _popHistory();
   }
 
   // returns the popped page
@@ -218,8 +217,8 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
   }
 
   @override
-  Future<void> setNewRoutePath(GetNavConfig configuration) async {
-    await pushHistory(configuration);
+  Future<void> setNewRoutePath(GetNavConfig configuration) {
+    return pushHistory(configuration);
   }
 
   Future<T> toNamed<T>(
@@ -232,8 +231,8 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
       page = uri.toString();
     }
 
-    final decoder = Get.routeTree.matchRoute(page, arguments: arguments);
-    decoder.replaceArguments(arguments);
+    final decoder = Get.routeTree.matchRoute(page, arguments: arguments)
+      ..replaceArguments(arguments);
 
     final completer = Completer<T>();
 
@@ -260,7 +259,6 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
       case PopMode.History:
         return _canPopHistory();
       case PopMode.Page:
-      default:
         return _canPopPage();
     }
   }
@@ -275,8 +273,8 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     return currentTreeBranch.length > 1 ? true : _canPopHistory();
   }
 
-  Future<GetNavConfig?> _doPopHistory() async {
-    return await _unsafeHistoryRemoveAt(history.length - 1);
+  Future<GetNavConfig?> _doPopHistory() {
+    return _unsafeHistoryRemoveAt(history.length - 1);
   }
 
   // @override
@@ -302,7 +300,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
         final prevLocation = prevHistoryEntry.locationString;
         if (newLocation == prevLocation) {
           //pop the entire history entry
-          return await _popHistory();
+          return _popHistory();
         }
       }
 
@@ -318,7 +316,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
       return res;
     } else {
       //remove entire entry
-      return await _popHistory();
+      return _popHistory();
     }
   }
 
@@ -345,25 +343,23 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     return true;
   }
 
-  Future<GetNavConfig?> _pop(PopMode mode) async {
+  Future<GetNavConfig?>? _pop(PopMode mode) {
     switch (mode) {
       case PopMode.History:
-        return await _popHistory();
+        return _popHistory();
       case PopMode.Page:
-        return await _popPage();
-      default:
-        return null;
+        return _popPage();
     }
   }
 
-  Future<GetNavConfig?> _popHistory() async {
+  Future<GetNavConfig?>? _popHistory() {
     if (!_canPopHistory()) return null;
-    return await _doPopHistory();
+    return _doPopHistory();
   }
 
-  Future<GetNavConfig?> _popPage() async {
+  Future<GetNavConfig?>? _popPage() {
     if (!_canPopPage()) return null;
-    return await _doPopPage();
+    return _doPopPage();
   }
 
   Future<void> _pushHistory(GetNavConfig config) async {
@@ -380,8 +376,6 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
             await _unsafeHistoryAdd(config);
             break;
           case PreventDuplicateHandlingMode.DoNothing:
-          default:
-            break;
         }
         return;
       }
@@ -389,8 +383,8 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     await _unsafeHistoryAdd(config);
   }
 
-  Future<void> _removeHistoryEntry(GetNavConfig entry) async {
-    await _unsafeHistoryRemove(entry);
+  Future<void> _removeHistoryEntry(GetNavConfig entry) {
+    return _unsafeHistoryRemove(entry);
   }
 
   Future<void> _unsafeHistoryAdd(GetNavConfig config) async {
@@ -418,15 +412,14 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
 
 class GetNavigator extends Navigator {
   GetNavigator({
-    GlobalKey<NavigatorState>? key,
-    bool Function(Route<dynamic>, dynamic)? onPopPage,
-    required List<Page> pages,
+    super.key,
+    PopPageCallback? onPopPage,
+    required super.pages,
     List<NavigatorObserver>? observers,
-    bool reportsRouteUpdateToEngine = false,
+    super.reportsRouteUpdateToEngine,
     TransitionDelegate? transitionDelegate,
   }) : super(
           //keys should be optional
-          key: key,
           onPopPage: onPopPage ??
               (route, result) {
                 final didPop = route.didPop(result);
@@ -435,8 +428,6 @@ class GetNavigator extends Navigator {
                 }
                 return true;
               },
-          reportsRouteUpdateToEngine: reportsRouteUpdateToEngine,
-          pages: pages,
           observers: [
             // GetObserver(),
             if (observers != null) ...observers,

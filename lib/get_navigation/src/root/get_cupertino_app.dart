@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../get_core/get_core.dart';
-import '../../../get_instance/get_instance.dart';
-import '../../../get_state_manager/get_state_manager.dart';
-import '../../../get_utils/get_utils.dart';
-import '../../get_navigation.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 class GetCupertinoApp extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
@@ -21,7 +20,6 @@ class GetCupertinoApp extends StatelessWidget {
   final TransitionBuilder? builder;
   final String title;
   final GenerateAppTitle? onGenerateTitle;
-  final CustomTransition? customTransition;
   final Color? color;
   final Map<String, Map<String, String>>? translationsKeys;
   final Translations? translations;
@@ -43,16 +41,13 @@ class GetCupertinoApp extends StatelessWidget {
   final Map<Type, Action<Intent>>? actions;
   final Function(Routing?)? routingCallback;
   final Transition? defaultTransition;
-  final bool? opaqueRoute;
   final VoidCallback? onInit;
   final VoidCallback? onReady;
   final VoidCallback? onDispose;
   final bool? enableLog;
   final LogWriterCallback? logWriterCallback;
-  final bool? popGesture;
   final SmartManagement smartManagement;
   final Bindings? initialBinding;
-  final Duration? transitionDuration;
   final bool? defaultGlobalState;
   final List<GetPage>? getPages;
   final GetPage? unknownRoute;
@@ -62,8 +57,9 @@ class GetCupertinoApp extends StatelessWidget {
   final BackButtonDispatcher? backButtonDispatcher;
   final CupertinoThemeData? theme;
   final bool useInheritedMediaQuery;
+
   const GetCupertinoApp({
-    Key? key,
+    super.key,
     this.theme,
     this.navigatorKey,
     this.home,
@@ -82,7 +78,6 @@ class GetCupertinoApp extends StatelessWidget {
     this.title = '',
     this.onGenerateTitle,
     this.color,
-    this.customTransition,
     this.onInit,
     this.onDispose,
     this.locale,
@@ -105,11 +100,8 @@ class GetCupertinoApp extends StatelessWidget {
     this.defaultTransition,
     this.onReady,
     this.getPages,
-    this.opaqueRoute,
     this.enableLog = kDebugMode,
     this.logWriterCallback,
-    this.popGesture,
-    this.transitionDuration,
     this.defaultGlobalState,
     this.highContrastTheme,
     this.highContrastDarkTheme,
@@ -117,11 +109,10 @@ class GetCupertinoApp extends StatelessWidget {
   })  : routeInformationProvider = null,
         routeInformationParser = null,
         routerDelegate = null,
-        backButtonDispatcher = null,
-        super(key: key);
+        backButtonDispatcher = null;
 
   GetCupertinoApp.router({
-    Key? key,
+    super.key,
     this.theme,
     this.routeInformationProvider,
     RouteInformationParser<Object>? routeInformationParser,
@@ -146,23 +137,19 @@ class GetCupertinoApp extends StatelessWidget {
     this.debugShowCheckedModeBanner = true,
     this.shortcuts,
     this.actions,
-    this.customTransition,
     this.translationsKeys,
     this.translations,
     this.textDirection,
     this.fallbackLocale,
     this.routingCallback,
     this.defaultTransition,
-    this.opaqueRoute,
     this.onInit,
     this.onReady,
     this.onDispose,
     this.enableLog = kDebugMode,
     this.logWriterCallback,
-    this.popGesture,
     this.smartManagement = SmartManagement.full,
     this.initialBinding,
-    this.transitionDuration,
     this.defaultGlobalState,
     this.getPages,
     this.unknownRoute,
@@ -180,8 +167,7 @@ class GetCupertinoApp extends StatelessWidget {
         onGenerateInitialRoutes = null,
         onUnknownRoute = null,
         routes = null,
-        initialRoute = null,
-        super(key: key) {
+        initialRoute = null {
     Get.routerDelegate = routerDelegate;
     Get.routeInformationParser = routeInformationParser;
   }
@@ -206,8 +192,6 @@ class GetCupertinoApp extends StatelessWidget {
             Get.addTranslations(translationsKeys!);
           }
 
-          Get.customTransition = customTransition;
-
           initialBinding?.dependencies();
           if (getPages != null) {
             Get.addPages(getPages!);
@@ -217,22 +201,16 @@ class GetCupertinoApp extends StatelessWidget {
           onInit?.call();
 
           Get.config(
-            enableLog: enableLog ?? kDebugMode,
-            logWriterCallback: logWriterCallback,
             defaultTransition: defaultTransition ?? Get.defaultTransition,
-            defaultOpaqueRoute: opaqueRoute ?? Get.isOpaqueRouteDefault,
-            defaultPopGesture: popGesture ?? Get.isPopGestureEnable,
-            defaultDurationTransition:
-                transitionDuration ?? Get.defaultTransitionDuration,
           );
         },
-        builder: (_) => routerDelegate != null
+        builder: (controller) => routerDelegate != null
             ? CupertinoApp.router(
                 routerDelegate: routerDelegate!,
                 routeInformationParser: routeInformationParser!,
                 backButtonDispatcher: backButtonDispatcher,
                 routeInformationProvider: routeInformationProvider,
-                key: _.unikey,
+                key: controller.unikey,
                 theme: theme,
                 builder: defaultBuilder,
                 title: title,
@@ -252,7 +230,7 @@ class GetCupertinoApp extends StatelessWidget {
                 // useInheritedMediaQuery: useInheritedMediaQuery,
               )
             : CupertinoApp(
-                key: _.unikey,
+                key: controller.unikey,
                 theme: theme,
                 navigatorKey: (navigatorKey == null
                     ? Get.key

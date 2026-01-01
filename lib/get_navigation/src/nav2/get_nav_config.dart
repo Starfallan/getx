@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-
-import '../../../get.dart';
+import 'package:get/get.dart';
 
 // class GetRouterState extends GetxController {
 //   GetRouterState({required this.currentTreeBranch});
@@ -21,17 +20,14 @@ import '../../../get.dart';
 /// This config enables us to navigate directly to a sub-url
 class GetNavConfig extends RouteInformation {
   final List<GetPage> currentTreeBranch;
+
   GetPage? get currentPage => currentTreeBranch.last;
 
   GetNavConfig({
     required this.currentTreeBranch,
     required String? location,
-    required Object? state,
-  }) : super(
-          uri: Uri.parse(location ?? '/'),
-          // location: location,
-          state: state,
-        );
+    required super.state,
+  }) : super(uri: Uri.parse(location ?? '/'));
 
   String get locationString {
     return uri.toString();
