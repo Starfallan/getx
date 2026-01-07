@@ -33,10 +33,9 @@ class GetObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    final newRouteName = _extractRouteName(route);
 
     if (kDebugMode && route is GetPageRoute) {
-      Get.log("CLOSE TO ROUTE $newRouteName");
+      Get.log("CLOSE TO ROUTE ${_extractRouteName(route)}");
     }
     if (previousRoute != null) {
       RouterReportManager.reportCurrentRoute(previousRoute);
@@ -48,9 +47,10 @@ class GetObserver extends NavigatorObserver {
     _routeSend?.update((value) {
       // Only PageRoute is allowed to change current value
       if (previousRoute is PageRoute) {
+        final previousRouteName = _extractRouteName(previousRoute) ?? '';
         value
-          ..current = _extractRouteName(previousRoute) ?? ''
-          ..previous = newRouteName ?? '';
+          ..current = previousRouteName
+          ..previous = previousRouteName;
       } else if (value.previous.isNotEmpty) {
         value.current = value.previous;
       }
