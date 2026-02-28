@@ -227,7 +227,7 @@ class GetMaterialApp extends StatelessWidget {
                 backButtonDispatcher: backButtonDispatcher,
                 routeInformationProvider: routeInformationProvider,
                 key: controller.unikey,
-                builder: defaultBuilder,
+                builder: builder,
                 title: title,
                 onGenerateTitle: onGenerateTitle,
                 color: color,
@@ -278,7 +278,7 @@ class GetMaterialApp extends StatelessWidget {
                         GetObserver(routingCallback, Get.routing)
                       ]
                   ..addAll(navigatorObservers!)),
-                builder: defaultBuilder,
+                builder: builder,
                 title: title,
                 onGenerateTitle: onGenerateTitle,
                 color: color,
@@ -305,18 +305,6 @@ class GetMaterialApp extends StatelessWidget {
                 //   actions: actions,
               ),
       );
-
-  Widget defaultBuilder(BuildContext context, Widget? child) {
-    return Directionality(
-      textDirection: textDirection ??
-          (rtlLanguages.contains(Get.locale?.languageCode)
-              ? TextDirection.rtl
-              : TextDirection.ltr),
-      child: builder == null
-          ? (child ?? const Material())
-          : builder!(context, child ?? const Material()),
-    );
-  }
 
   Route<dynamic> generator(RouteSettings settings) {
     return PageRedirect(settings: settings, unknownRoute: unknownRoute).page();
