@@ -43,6 +43,10 @@ class RxMap<K, V> extends MapMixin<K, V>
     refresh();
   }
 
+  void clearOnly() {
+    _value.clear();
+  }
+
   @override
   Iterable<K> get keys => value.keys;
 
@@ -51,6 +55,10 @@ class RxMap<K, V> extends MapMixin<K, V>
     final val = _value.remove(key);
     refresh();
     return val;
+  }
+
+  V? removeOnly(Object? key) {
+    return _value.remove(key);
   }
 
   @override

@@ -42,6 +42,10 @@ class RxSet<E> extends SetMixin<E>
     return val;
   }
 
+  bool addOnly(E value) {
+    return _value.add(value);
+  }
+
   @override
   bool contains(Object? element) {
     return value.contains(element);
@@ -67,6 +71,10 @@ class RxSet<E> extends SetMixin<E>
     return hasRemoved;
   }
 
+  bool removeOnly(Object? value) {
+    return _value.remove(value);
+  }
+
   @override
   Set<E> toSet() {
     return value.toSet();
@@ -78,10 +86,18 @@ class RxSet<E> extends SetMixin<E>
     refresh();
   }
 
+  void addAllOnly(Iterable<E> elements) {
+    _value.addAll(elements);
+  }
+
   @override
   void clear() {
     _value.clear();
     refresh();
+  }
+
+  void clearOnly() {
+    _value.clear();
   }
 
   @override
@@ -90,16 +106,28 @@ class RxSet<E> extends SetMixin<E>
     refresh();
   }
 
+  void removeAllOnly(Iterable<Object?> elements) {
+    _value.removeAll(elements);
+  }
+
   @override
   void retainAll(Iterable<Object?> elements) {
     _value.retainAll(elements);
     refresh();
   }
 
+  void retainAllOnly(Iterable<Object?> elements) {
+    _value.retainAll(elements);
+  }
+
   @override
   void retainWhere(bool Function(E) test) {
     _value.retainWhere(test);
     refresh();
+  }
+
+  void retainWhereOnly(bool Function(E) test) {
+    _value.retainWhere(test);
   }
 }
 

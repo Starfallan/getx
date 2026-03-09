@@ -66,10 +66,18 @@ class RxList<E> extends ListMixin<E>
     refresh();
   }
 
+  void addOnly(E element) {
+    _value.add(element);
+  }
+
   @override
   void addAll(Iterable<E> iterable) {
     _value.addAll(iterable);
     refresh();
+  }
+
+  void addAllOnly(Iterable<E> iterable) {
+    _value.addAll(iterable);
   }
 
   @override
@@ -78,10 +86,18 @@ class RxList<E> extends ListMixin<E>
     refresh();
   }
 
+  void removeWhereOnly(bool Function(E element) test) {
+    _value.removeWhere(test);
+  }
+
   @override
   void retainWhere(bool Function(E element) test) {
     _value.retainWhere(test);
     refresh();
+  }
+
+  void retainWhereOnly(bool Function(E element) test) {
+    _value.retainWhere(test);
   }
 
   @override
@@ -100,10 +116,22 @@ class RxList<E> extends ListMixin<E>
     refresh();
   }
 
+  set lengthOnly(int newLength) {
+    _value.length = newLength;
+  }
+
+  void clearOnly() {
+    lengthOnly = 0;
+  }
+
   @override
   void insertAll(int index, Iterable<E> iterable) {
     _value.insertAll(index, iterable);
     refresh();
+  }
+
+  void insertAllOnly(int index, Iterable<E> iterable) {
+    _value.insertAll(index, iterable);
   }
 
   @override
@@ -123,6 +151,10 @@ class RxList<E> extends ListMixin<E>
   void sort([int Function(E a, E b)? compare]) {
     _value.sort(compare);
     refresh();
+  }
+
+  void sortOnly([int Function(E a, E b)? compare]) {
+    _value.sort(compare);
   }
 }
 
