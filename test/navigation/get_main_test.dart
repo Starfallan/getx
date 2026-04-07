@@ -483,6 +483,40 @@ void main() {
 
     expect(find.byType(FirstScreen), findsOneWidget);
   });
+
+  testWidgets("Transition.native follows ThemeData.pageTransitionsTheme",
+      (tester) async {
+    await tester.pumpWidget(GetMaterialApp(
+      defaultTransition: Transition.native,
+      theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: _MarkerPageTransitionsBuilder(),
+            TargetPlatform.fuchsia: _MarkerPageTransitionsBuilder(),
+            TargetPlatform.iOS: _MarkerPageTransitionsBuilder(),
+            TargetPlatform.linux: _MarkerPageTransitionsBuilder(),
+            TargetPlatform.macOS: _MarkerPageTransitionsBuilder(),
+            TargetPlatform.windows: _MarkerPageTransitionsBuilder(),
+          },
+        ),
+      ),
+      home: const Scaffold(
+        body: Text('Home'),
+      ),
+    ));
+
+    Get.to(const FirstScreen());
+
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is _TransitionMarker && widget.isGetPageRoute,
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(FirstScreen), findsOneWidget);
+  });
 }
 
 class FirstScreen extends StatelessWidget {
@@ -509,5 +543,39 @@ class ThirdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
+  }
+}
+
+class _MarkerPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _MarkerPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return _TransitionMarker(
+      isGetPageRoute: route is GetPageRoute,
+      child: child,
+    );
+  }
+}
+
+class _TransitionMarker extends StatelessWidget {
+  const _TransitionMarker({
+    Key? key,
+    required this.isGetPageRoute,
+    required this.child,
+  }) : super(key: key);
+
+  final bool isGetPageRoute;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
   }
 }

@@ -166,16 +166,9 @@ Cannot read the previousTitle for a route that has not yet been installed''',
 
     switch (Get.defaultTransition) {
       case Transition.native:
-        if (Platform.isIOS || Platform.isMacOS) {
-          return CupertinoRouteTransitionMixin.buildPageTransitions<T>(
-            rawRoute,
-            context,
-            animation,
-            secondaryAnimation,
-            child,
-          );
-        }
-        return const ZoomPageTransitionsBuilder().buildTransitions(
+        // Defer to the app theme so Flutter can pick the platform-default
+        // transition builder, including PredictiveBackPageTransitionsBuilder.
+        return Theme.of(context).pageTransitionsTheme.buildTransitions<T>(
           rawRoute,
           context,
           animation,
