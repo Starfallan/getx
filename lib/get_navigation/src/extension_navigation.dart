@@ -588,71 +588,22 @@ you can only use widgets and widget functions here''';
     return overlay;
   }
 
-  /// give access to Theme.of(context)
-  ThemeData get theme {
-    var theme = ThemeData.fallback();
-    if (context != null) {
-      theme = Theme.of(context!);
-    }
-    return theme;
-  }
-
   ///The current [WidgetsBinding]
   WidgetsBinding get engine {
     return WidgetsFlutterBinding.ensureInitialized();
   }
 
-  /// The window to which this binding is bound.
-  FlutterView get window => View.of(context!);
-
   Locale? get deviceLocale => PlatformDispatcher.instance.locale;
-
-  ///The number of device pixels for each logical pixel.
-  double get pixelRatio => window.devicePixelRatio;
-
-  Size get size => window.physicalSize / pixelRatio;
-
-  ///The horizontal extent of this size.
-  double get width => size.width;
-
-  ///The vertical extent of this size
-  double get height => size.height;
-
-  ///The distance from the top edge to the first unpadded pixel,
-  ///in physical pixels.
-  double get statusBarHeight => window.padding.top;
-
-  ///The distance from the bottom edge to the first unpadded pixel,
-  ///in physical pixels.
-  double get bottomBarHeight => window.padding.bottom;
 
   ///The system-reported text scale.
   double get textScaleFactor => PlatformDispatcher.instance.textScaleFactor;
-
-  /// give access to TextTheme.of(context)
-  TextTheme get textTheme => theme.textTheme;
-
-  /// give access to Mediaquery.of(context)
-  MediaQueryData get mediaQuery => MediaQuery.of(context!);
-
-  /// Check if dark mode theme is enable
-  bool get isDarkMode => (theme.brightness == Brightness.dark);
 
   /// Check if dark mode theme is enable on platform on android Q+
   bool get isPlatformDarkMode =>
       (PlatformDispatcher.instance.platformBrightness == Brightness.dark);
 
-  /// give access to Theme.of(context).iconTheme.color
-  Color? get iconColor => theme.iconTheme.color;
-
   /// give access to FocusScope.of(context)
   FocusNode? get focusScope => FocusManager.instance.primaryFocus;
-
-  // /// give access to Immutable MediaQuery.of(context).size.height
-  // double get height => MediaQuery.of(context).size.height;
-
-  // /// give access to Immutable MediaQuery.of(context).size.width
-  // double get width => MediaQuery.of(context).size.width;
 
   GlobalKey<NavigatorState> get key => _getxController.key;
 
