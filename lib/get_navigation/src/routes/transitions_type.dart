@@ -17,6 +17,7 @@ enum Transition {
   size,
   circularReveal,
   native,
+  sharedAxis,
 }
 
 typedef GetPageBuilder = Widget Function();

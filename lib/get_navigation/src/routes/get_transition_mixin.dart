@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
+import 'package:get/get_navigation/src/routes/shared_axis_transition.dart';
 
 mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   /// Builds the primary contents of the route.
@@ -11,7 +12,7 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   Widget buildContent(BuildContext context);
 
   @override
-  Duration get transitionDuration => const Duration(microseconds: 300);
+  Duration get transitionDuration => const Duration(milliseconds: 300);
 
   // The transitionDuration is used to create the AnimationController which is only
   // built once, so when page transition builder is updated and transitionDuration
@@ -155,6 +156,14 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
           animation,
           secondaryAnimation,
           child,
+        );
+
+      case Transition.sharedAxis:
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
         );
 
       case Transition.leftToRight:
