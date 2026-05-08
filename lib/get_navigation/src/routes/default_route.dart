@@ -32,7 +32,6 @@ class GetPageRoute<T> extends PageRoute<T>
     this.bindings,
     this.routeName,
     this.page,
-    this.title,
     this.barrierLabel,
     this.maintainState = true,
     this.middlewares,
@@ -94,9 +93,6 @@ class GetPageRoute<T> extends PageRoute<T>
   Widget buildContent(BuildContext context) {
     return _getChild();
   }
-
-  @override
-  final String? title;
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';

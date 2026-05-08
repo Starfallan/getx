@@ -1,13 +1,37 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
 
 mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
-  ValueNotifier<String?>? _previousTitle;
+  /// Builds the primary contents of the route.
+  @protected
+  Widget buildContent(BuildContext context);
+
+  @override
+  Duration get transitionDuration => const Duration(microseconds: 300);
+
+  // The transitionDuration is used to create the AnimationController which is only
+  // built once, so when page transition builder is updated and transitionDuration
+  // has a new value, the AnimationController cannot be updated automatically. So we
+  // manually update its duration here.
+  @override
+  TickerFuture didPush() {
+    controller?.duration = transitionDuration;
+    return super.didPush();
+  }
+
+  // The reverseTransitionDuration is used to create the AnimationController
+  // which is only built once, so when page transition builder is updated and
+  // reverseTransitionDuration has a new value, the AnimationController cannot
+  // be updated automatically. So we manually update its reverseDuration here.
+  @override
+  bool didPop(T? result) {
+    controller?.reverseDuration = reverseTransitionDuration;
+    return super.didPop(result);
+  }
 
   @override
   Color? get barrierColor => null;
@@ -15,142 +39,89 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   @override
   String? get barrierLabel => null;
 
-  /// Whether a pop gesture can be started by the user.
-  ///
-  /// Returns true if the user can edge-swipe to a previous route.
-  ///
-  /// Returns false once [isPopGestureInProgress] is true, but
-  /// [isPopGestureInProgress] can only become true if [popGestureEnabled] was
-  /// true first.
-  ///
-  /// This should only be used between frames, not during build.
   @override
-  bool get popGestureEnabled {
-    // If there's nothing to go back to, then obviously we don't support
-    // the back gesture.
-    if (isFirst) return false;
-    // If the route wouldn't actually pop if we popped it, then the gesture
-    // would be really confusing (or would skip internal routes),
-    // so disallow it.
-    if (willHandlePopInternally) return false;
-    // support [PopScope]
-    if (popDisposition == RoutePopDisposition.doNotPop) return false;
-    // Fullscreen dialogs aren't dismissible by back swipe.
-    if (fullscreenDialog) return false;
-    // If we're in an animation already, we cannot be manually swiped.
-    if (!animation!.isCompleted) return false;
-    // If we're being popped into, we also cannot be swiped until the pop above
-    // it completes. This translates to our secondary animation being
-    // dismissed.
-    if (!secondaryAnimation!.isDismissed) return false;
-    // If we're in a gesture already, we cannot start another.
-    if (popGestureInProgress) return false;
+  DelegatedTransitionBuilder? get delegatedTransition => _delegatedTransition;
 
-    // Looks like a back gesture would be welcome!
-    return true;
-  }
-
-  /// True if an iOS-style back swipe pop gesture is currently
-  /// underway for this route.
-  ///
-  /// See also:
-  ///
-  ///  * [isPopGestureInProgress], which returns true if a Cupertino pop gesture
-  ///    is currently underway for specific route.
-  ///  * [popGestureEnabled], which returns true if a user-triggered pop gesture
-  ///    would be allowed.
-  @override
-  bool get popGestureInProgress => navigator!.userGestureInProgress;
-
-  /// The title string of the previous [CupertinoPageRoute].
-  ///
-  /// The [ValueListenable]'s value is readable after the route is installed
-  /// onto a [Navigator]. The [ValueListenable] will also notify its listeners
-  /// if the value changes (such as by replacing the previous route).
-  ///
-  /// The [ValueListenable] itself will be null before the route is installed.
-  /// Its content value will be null if the previous route has no title or
-  /// is not a [CupertinoPageRoute].
-  ///
-  /// See also:
-  ///
-  ///  * [ValueListenableBuilder], which can be used to listen and rebuild
-  ///    widgets based on a ValueListenable.
-  ValueListenable<String?> get previousTitle {
-    assert(
-      _previousTitle != null,
-      '''
-Cannot read the previousTitle for a route that has not yet been installed''',
-    );
-    return _previousTitle!;
-  }
-
-  /// {@template flutter.cupertino.CupertinoRouteTransitionMixin.title}
-  /// A title string for this route.
-  ///
-  /// Used to auto-populate [CupertinoNavigationBar] and
-  /// [CupertinoSliverNavigationBar]'s `middle`/`largeTitle` widgets when
-  /// one is not manually supplied.
-  /// {@endtemplate}
-  String? get title;
-
-  /// Builds the primary contents of the route.
-  @protected
-  Widget buildContent(BuildContext context);
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return Semantics(
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: buildContent(context),
-    );
-  }
-
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    return buildPageTransitions<T>(
-        this, context, animation, secondaryAnimation, child);
+  static Widget? _delegatedTransition(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    bool allowSnapshotting,
+    Widget? child,
+  ) {
+    final delegatedTransitionBuilder = getDelegatedTransitionBuilder;
+    return delegatedTransitionBuilder != null
+        ? delegatedTransitionBuilder(
+            context, animation, secondaryAnimation, allowSnapshotting, child)
+        : null;
   }
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
-    // Don't perform outgoing animation if the next route is a
-    // fullscreen dialog.
+    // Don't perform outgoing animation if the next route is a fullscreen dialog,
+    // or there is no matching transition to use.
+    // Don't perform outgoing animation if the next route is a fullscreen dialog.
+    final bool nextRouteIsNotFullscreen =
+        (nextRoute is! PageRoute<T>) || !nextRoute.fullscreenDialog;
 
-    return (nextRoute is CupertinoRouteTransitionMixin &&
-        !nextRoute.fullscreenDialog);
+    // If the next route has a delegated transition, then this route is able to
+    // use that delegated transition to smoothly sync with the next route's
+    // transition.
+    final bool nextRouteHasDelegatedTransition =
+        nextRoute is ModalRoute<T> && nextRoute.delegatedTransition != null;
+
+    // Otherwise if the next route has the same route transition mixin as this
+    // one, then this route will already be synced with its transition.
+    return nextRouteIsNotFullscreen &&
+        ((nextRoute is MaterialRouteTransitionMixin) ||
+            nextRouteHasDelegatedTransition);
   }
 
   @override
-  void didChangePrevious(Route<dynamic>? previousRoute) {
-    final previousTitleString = previousRoute is CupertinoRouteTransitionMixin
-        ? previousRoute.title
-        : null;
-    if (_previousTitle == null) {
-      _previousTitle = ValueNotifier<String?>(previousTitleString);
-    } else {
-      _previousTitle!.value = previousTitleString;
-    }
-    super.didChangePrevious(previousRoute);
+  bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
+    // Suppress previous route from transitioning if this is a fullscreenDialog route.
+    return previousRoute is PageRoute && !fullscreenDialog;
   }
 
-  /// Returns a [CupertinoFullscreenDialogTransition] if [route] is a full
-  /// screen dialog, otherwise a [CupertinoPageTransition] is returned.
-  ///
-  /// Used by [CupertinoPageRoute.buildTransitions].
-  ///
-  /// This method can be applied to any [PageRoute], not just
-  /// [CupertinoPageRoute]. It's typically used to provide a Cupertino style
-  /// horizontal transition for material widgets when the target platform
-  /// is [TargetPlatform.iOS].
-  ///
-  /// See also:
-  ///
-  ///  * [CupertinoPageTransitionsBuilder], which uses this method to define a
-  ///    [PageTransitionsBuilder] for the [PageTransitionsTheme].
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    final Widget result = buildContent(context);
+    return Semantics(
+        scopesRoute: true, explicitChildNodes: true, child: result);
+  }
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return buildPageTransitions<T>(
+        this, context, animation, secondaryAnimation, child);
+  }
+
+  static DelegatedTransitionBuilder? get getDelegatedTransitionBuilder {
+    switch (Get.defaultTransition) {
+      case Transition.native:
+        if (Platform.isIOS || Platform.isMacOS) {
+          return null;
+          // return CupertinoPageTransition.delegatedTransition;
+        }
+        return const ZoomPageTransitionsBuilder().delegatedTransition;
+
+      case Transition.zoom:
+        return const ZoomPageTransitionsBuilder().delegatedTransition;
+
+      default:
+        return null;
+    }
+  }
+
   static Widget buildPageTransitions<T>(
     PageRoute<T> rawRoute,
     BuildContext context,
@@ -158,12 +129,6 @@ Cannot read the previousTitle for a route that has not yet been installed''',
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    // Check if the route has an animation that's currently participating
-    // in a back swipe gesture.
-    //
-    // In the middle of a back gesture drag, let the transition be linear to
-    // match finger motions.
-
     switch (Get.defaultTransition) {
       case Transition.native:
         if (Platform.isIOS || Platform.isMacOS) {

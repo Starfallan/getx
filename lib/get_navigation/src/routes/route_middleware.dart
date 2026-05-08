@@ -220,7 +220,6 @@ class PageRedirect {
     return GetPageRoute<T>(
       page: r.page,
       parameter: r.parameters,
-      title: r.title,
       maintainState: r.maintainState,
       routeName: r.name,
       settings: r,
