@@ -1,11 +1,13 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/cupertino.dart' show CupertinoRouteTransitionMixin;
+import 'package:flutter/cupertino.dart'
+    show CupertinoRouteTransitionMixin, CupertinoPageTransition;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:get/get_navigation/src/routes/shared_axis_transition.dart';
 
+/// [MaterialRouteTransitionMixin]
 mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   /// Builds the primary contents of the route.
   @protected
@@ -41,7 +43,14 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  DelegatedTransitionBuilder? get delegatedTransition => _delegatedTransition;
+  DelegatedTransitionBuilder? get delegatedTransition =>
+      switch (Get.defaultTransition) {
+        Transition.zoom => null,
+        Transition.cupertino ||
+        Transition.cupertinoDialog =>
+          CupertinoPageTransition.delegatedTransition,
+        _ => _delegatedTransition
+      };
 
   static Widget? _delegatedTransition(
     BuildContext context,
@@ -49,13 +58,8 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
     Animation<double> secondaryAnimation,
     bool allowSnapshotting,
     Widget? child,
-  ) {
-    final delegatedTransitionBuilder = getDelegatedTransitionBuilder;
-    return delegatedTransitionBuilder != null
-        ? delegatedTransitionBuilder(
-            context, animation, secondaryAnimation, allowSnapshotting, child)
-        : null;
-  }
+  ) =>
+      null;
 
   @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
@@ -106,22 +110,16 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
         this, context, animation, secondaryAnimation, child);
   }
 
-  static DelegatedTransitionBuilder? get getDelegatedTransitionBuilder {
-    switch (Get.defaultTransition) {
-      case Transition.native:
-        if (Platform.isIOS || Platform.isMacOS) {
-          return null;
-          // return CupertinoPageTransition.delegatedTransition;
-        }
-        return const ZoomPageTransitionsBuilder().delegatedTransition;
-
-      case Transition.zoom:
-        return const ZoomPageTransitionsBuilder().delegatedTransition;
-
-      default:
-        return null;
-    }
-  }
+  // static Duration get getTransitionDuration {
+  //   switch (Get.defaultTransition) {
+  //     case Transition.native:
+  //       if (Platform.isIOS || Platform.isMacOS) {
+  //         return CupertinoRouteTransitionMixin.kTransitionDuration;
+  //       }
+  //     default:
+  //   }
+  //   return const Duration(milliseconds: 300);
+  // }
 
   static Widget buildPageTransitions<T>(
     PageRoute<T> rawRoute,
@@ -150,12 +148,11 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
         );
 
       case Transition.cupertino || Transition.cupertinoDialog:
-        return CupertinoRouteTransitionMixin.buildPageTransitions<T>(
-          rawRoute,
-          context,
-          animation,
-          secondaryAnimation,
-          child,
+        return CupertinoPageTransition(
+          primaryRouteAnimation: animation,
+          secondaryRouteAnimation: secondaryAnimation,
+          linearTransition: rawRoute.popGestureInProgress,
+          child: child,
         );
 
       case Transition.sharedAxis:
