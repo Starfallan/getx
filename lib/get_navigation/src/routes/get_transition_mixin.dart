@@ -45,7 +45,7 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   @override
   DelegatedTransitionBuilder? get delegatedTransition =>
       switch (Get.defaultTransition) {
-        Transition.zoom => null,
+        Transition.native || Transition.zoom => null,
         Transition.cupertino ||
         Transition.cupertinoDialog =>
           CupertinoPageTransition.delegatedTransition,
