@@ -79,6 +79,14 @@ mixin GetLifeCycleBase {
     onClose();
   }
 
+  /// Marks a closed controller as active again, so it can be reused after
+  /// being removed from the dependency store (e.g. restored from a
+  /// picture-in-picture overlay). Only call this when [onClose] skipped
+  /// resource disposal and the instance is re-registered via `Get.put`.
+  void $reopenLifeCycle() {
+    _isClosed = false;
+  }
+
   void $configureLifeCycle() {
     _checkIfAlreadyConfigured();
     onStart._callback = _onStart;
