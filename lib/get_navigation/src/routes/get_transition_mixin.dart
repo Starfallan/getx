@@ -1,11 +1,11 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/cupertino.dart'
+import 'package:cupertino_ui/cupertino_ui.dart'
     show CupertinoRouteTransitionMixin, CupertinoPageTransition;
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import 'package:get/get_navigation/src/routes/shared_axis_transition.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [MaterialRouteTransitionMixin]
 mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {

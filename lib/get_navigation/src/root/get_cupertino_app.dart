@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:material_ui/material_ui.dart' show Material, ThemeData;
 
 class GetCupertinoApp extends StatelessWidget {
   final GlobalKey<NavigatorState>? navigatorKey;

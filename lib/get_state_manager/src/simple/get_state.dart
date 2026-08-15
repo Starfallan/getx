@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:get/get_instance/src/get_instance.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:get/instance_manager.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Complies with `GetStateUpdater`
 ///

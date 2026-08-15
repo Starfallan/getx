@@ -105,8 +105,9 @@ extension MapExtension<K, V> on Map<K, V> {
     if (this is RxMap) {
       final map = (this as RxMap);
       if (map._value == val) return;
-      map._value = val;
-      map.refresh();
+      map
+        .._value = val
+        ..refresh();
     } else {
       if (this == val) return;
       clear();

@@ -3,9 +3,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/list_notifier.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GetDelegate extends RouterDelegate<GetNavConfig>
     with ListenableMixin, ListNotifierMixin {

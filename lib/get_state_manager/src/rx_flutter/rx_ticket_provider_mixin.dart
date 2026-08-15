@@ -1,9 +1,9 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Used like `SingleTickerProviderMixin` but only with Get Controllers.
 /// Simplifies AnimationController creation inside GetxController.
@@ -55,7 +55,7 @@ mixin GetSingleTickerProviderStateMixin on GetxController
   }
 
   void didChangeDependencies(BuildContext context) {
-    if (_ticker != null) _ticker!.muted = !TickerMode.of(context);
+    if (_ticker != null) _ticker!.muted = !TickerMode.valuesOf(context).enabled;
   }
 
   @override
@@ -125,7 +125,7 @@ mixin GetTickerProviderStateMixin on GetxController implements TickerProvider {
   }
 
   void didChangeDependencies(BuildContext context) {
-    final muted = !TickerMode.of(context);
+    final muted = !TickerMode.valuesOf(context).enabled;
     if (_tickers != null) {
       for (final ticker in _tickers!) {
         ticker.muted = muted;

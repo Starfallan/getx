@@ -33,7 +33,7 @@ import 'package:get/utils.dart';
 abstract class GetView<T> extends StatelessWidget {
   const GetView({super.key});
 
-  final String? tag = null;
+  String? get tag => null;
 
   T get controller => GetInstance().find<T>(tag: tag)!;
 
@@ -51,7 +51,7 @@ abstract class GetWidget<S extends GetLifeCycleBase?> extends GetWidgetCache {
   const GetWidget({super.key});
 
   @protected
-  final String? tag = null;
+  String? get tag => null;
 
   S get controller => GetWidget._cache[this] as S;
 

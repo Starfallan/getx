@@ -66,5 +66,16 @@ linter:
     - use_truncating_division
     - use_string_buffers
     - unnecessary_statements
+analyzer:
+  errors:
+    unintended_html_in_doc_comment: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

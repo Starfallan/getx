@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MixinBuilder<T extends GetxController> extends StatelessWidget {
   final Widget Function(T) builder;
