@@ -147,8 +147,9 @@ Worker once<T>(
   sub = listener.listen(
     (event) {
       if (!_conditional(condition)) return;
-      ref._disposed = true;
-      ref._log('called');
+      ref
+        .._disposed = true
+        .._log('called');
       sub?.cancel();
       callback(event);
     },

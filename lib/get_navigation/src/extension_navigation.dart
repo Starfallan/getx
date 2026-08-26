@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/material.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/parse_route.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// It replaces the Flutter Navigator, but needs no context.
 /// You can to use navigator.push(YourRoute()) rather

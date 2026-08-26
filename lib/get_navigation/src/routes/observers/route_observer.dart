@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/material.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/router_report.dart';
 import 'package:get/instance_manager.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Extracts the name of a route based on it's instance type
 /// or null if not possible.

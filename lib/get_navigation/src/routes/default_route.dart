@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/router_report.dart';
 import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
+import 'package:material_ui/material_ui.dart';
 
 mixin PageRouteReportMixin<T> on Route<T> {
   @override
@@ -32,14 +32,11 @@ class GetPageRoute<T> extends PageRoute<T>
     this.bindings,
     this.routeName,
     this.page,
-    this.title,
     this.barrierLabel,
     this.maintainState = true,
     this.middlewares,
   });
 
-  @override
-  final Duration transitionDuration = const Duration(milliseconds: 300);
   final GetPageBuilder? page;
   final String? routeName;
   final Bindings? binding;
@@ -94,9 +91,6 @@ class GetPageRoute<T> extends PageRoute<T>
   Widget buildContent(BuildContext context) {
     return _getChild();
   }
-
-  @override
-  final String? title;
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
