@@ -111,6 +111,8 @@ mixin RxObjectMixin<T> on NotifyManager<T> {
     return _value;
   }
 
+  T get rawValue => _value;
+
   Stream<T> get stream => subject.stream;
 
   /// Returns a [StreamSubscription] similar to [listen], but with the
